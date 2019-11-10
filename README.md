@@ -50,7 +50,7 @@ Toggle `1`, or `0` in line `185` to toogle texture, produced texture or shading 
 ```
 
 ## Screenshot
-![](./screenshots/output.jpg)
+![](./screenshots/output_m.jpg)
 
 ## Development Environment
 Visual Studio 2017 ver 15.9.16
