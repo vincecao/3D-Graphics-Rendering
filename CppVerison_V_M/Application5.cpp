@@ -275,7 +275,7 @@ int Application5::Render()
 		for (int i = 0; i < 3; i++)
 			extraGrassList[i] = (float *)malloc(8 * sizeof(float));
 
-			extraGrassList = m_pRender->GzAddGrass(3, nameListTriangle, valueListTriangle);
+			extraGrassList = m_pRender->GzAddGrassWithModelSpace(3, nameListTriangle, valueListTriangle);
 
 			vertexGrassList[0][0] = extraGrassList[0][0];
 			vertexGrassList[0][1] = extraGrassList[0][1];

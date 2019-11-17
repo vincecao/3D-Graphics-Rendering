@@ -22,6 +22,16 @@ float norm2(GzCoord x);
 int signcheck(float var);
 float calZ(float x, float y, double A, double B, double C, double D);
 
+void setNormal(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3, double** normalTablePram);
+void setZ(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3, double* zTablePram);
+float getNormalX(float x, float y, float z, double** normalTablePram);
+float getNormalY(float x, float y, float z, double** normalTablePram);
+float getNormalZ(float x, float y, float z, double** normalTablePram);
+float getZ(float x, float y, float z, double* zTablePram);
+float getMidX(GzCoord V1, GzCoord V2, GzCoord V3);
+float getMidY(GzCoord V1, GzCoord V2, GzCoord V3);
+float getMidZ(GzCoord V1, GzCoord V2, GzCoord V3);
+
 int GzRender::GzRotXMat(float degree, GzMatrix mat)
 {
 	/* HW 3.1
@@ -1574,7 +1584,6 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 	return GZ_SUCCESS;
 }
 
-
 float** GzRender::GzAddGrass(int numParts, GzToken *nameList, GzPointer *valueList)
 {
 	typedef	struct {
@@ -1824,6 +1833,190 @@ float** GzRender::GzAddGrass(int numParts, GzToken *nameList, GzPointer *valueLi
 	result[2][7] = t3[1];
 
 	return result;
+}
+
+float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPointer *valueList) {
+	typedef GzCoord   Coord3[3];
+	int sorted_y[3] = { 0,1,2 };
+
+	double *zTablePram = (double *)malloc(4 * sizeof(double));
+	double **normalTablePram = (double **)malloc(3 * sizeof(double*));
+	for (int i = 0; i < 3; i++)
+		normalTablePram[i] = (double *)malloc(4 * sizeof(double));
+
+	GzCoord *v1, *v2, *v3;
+	GzCoord *n1, *n2, *n3;
+	float offsetx, offsety;
+
+	int temp, first_vertix;
+	Coord3* loc;
+
+	//vertex
+	loc = (Coord3*)*valueList;
+
+	for (int i = 0; i < 3 - 1; i++) {
+		for (int j = 0; j < 3 - 1 - i; j++) {
+			if ((*loc)[sorted_y[j]][Y] > (*loc)[sorted_y[j + 1]][Y]) {
+				temp = sorted_y[j];
+				sorted_y[j] = sorted_y[j + 1];
+				sorted_y[j + 1] = temp;
+			}
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		if (sorted_y[i] == 0) {
+			first_vertix = i;
+			break;
+		}
+	}
+
+	v1 = (*loc + sorted_y[0]);
+	v2 = (*loc + sorted_y[1]);
+	v3 = (*loc + sorted_y[2]);
+
+	//normal
+
+	loc = (Coord3*)valueList[1];
+
+	n1 = (*loc + sorted_y[0]);
+	n2 = (*loc + sorted_y[1]);
+	n3 = (*loc + sorted_y[2]);
+
+	setNormal(*v1, *v2, *v3, *n1, *n2, *n3, normalTablePram);
+	setZ(*v1, *v2, *v3, *n1, *n2, *n3, zTablePram);
+
+	float midX = getMidX(*v1, *v2, *v3);
+	float midY = getMidY(*v1, *v2, *v3);
+	float midZ = getMidZ(*v1, *v2, *v3);
+
+	float midNx = getNormalX(midX, midY, midZ, normalTablePram);
+	float midNy = getNormalY(midX, midY, midZ, normalTablePram);
+	float midNz = getNormalZ(midX, midY, midZ, normalTablePram);
+
+	//need normalize
+	float var;
+	var = pow(pow(midNx, 2) + pow(midNy, 2) + pow(midNz, 2), 0.5);
+	midNx /= var;
+	midNy /= var;
+	midNz /= var;
+
+
+	GzCoord top = { midX + midNx, midY + midNy, midZ + midNz };
+
+	float dY = (*v1)[1] - midY;
+	float dX = (*v1)[0] - midX;
+
+	offsetx = 0.01;
+	offsety = 0.01;
+
+	GzCoord base1 = { midX + offsetx, midY + offsety, getZ(midX + offsetx, midY + offsety, 0, zTablePram) };
+	GzCoord base2 = { midX - offsetx, midY - offsety, getZ(midX - offsetx, midY - offsety, 0, zTablePram) };
+	GzTextureIndex uvTop = { 0.5,0 };
+	GzTextureIndex uvBase1 = { -0.5, 0 };
+	GzTextureIndex uvBase2 = { 0, 1 };
+
+
+	float **result = (float **)malloc(3 * sizeof(float *));
+	for (int i = 0; i < 3; i++)
+		result[i] = (float *)malloc(8 * sizeof(float));
+
+	result[0][0] = top[0];
+	result[0][1] = top[1];
+	result[0][2] = top[2];
+	result[0][3] = midNx;
+	result[0][4] = midNy;
+	result[0][5] = midNz;
+	result[0][6] = uvTop[0];
+	result[0][7] = uvTop[1];
+
+	result[1][0] = base1[0];
+	result[1][1] = base1[1];
+	result[1][2] = base1[2];
+	result[1][3] = midNx;
+	result[1][4] = midNy;
+	result[1][5] = midNz;
+	result[1][6] = uvBase1[0];
+	result[1][7] = uvBase1[1];
+
+	result[2][0] = base2[0];
+	result[2][1] = base2[1];
+	result[2][2] = base2[2];
+	result[2][3] = midNx;
+	result[2][4] = midNy;
+	result[2][5] = midNz;
+	result[2][6] = uvBase2[0];
+	result[2][7] = uvBase2[1];
+
+	return result;
+}
+
+void setNormal(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3, double** normalTablePram) {
+	/*double **normalTablePram = (double **)malloc(3 * sizeof(double*));
+	for (int i = 0; i < 3; i++)
+		normalTablePram[i] = (double *)malloc(4 * sizeof(double));*/
+
+	GzCoord p1, p2, p3, N;
+
+	for (int i = 0; i < 3; i++) {
+		p1[i] = (V1)[i];
+		p2[i] = (V2)[i];
+		p3[i] = (V3)[i];
+	}
+
+	for (size_t i = 0; i < 3; i++)
+	{
+		p1[2] = (N1)[i];
+		p2[2] = (N2)[i];
+		p3[2] = (N3)[i];
+		calPlaneParams(p1, p2, p3, &normalTablePram[i][0], &normalTablePram[i][1], &normalTablePram[i][2], &normalTablePram[0][3]);
+
+	}
+	return;
+}
+
+void setZ(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3, double* zTablePram) {
+
+
+	GzCoord p1, p2, p3, N;
+
+	for (int i = 0; i < 3; i++) {
+		p1[i] = (V1)[i];
+		p2[i] = (V2)[i];
+		p3[i] = (V3)[i];
+	}
+
+	calPlaneParams(p1, p2, p3, &zTablePram[0], &zTablePram[1], &zTablePram[2], &zTablePram[3]);
+
+	return;
+}
+
+float getNormalX(float x, float y, float z, double** normalTablePram) {
+	return calZ(x, y, normalTablePram[0][0], normalTablePram[0][1], normalTablePram[0][2], normalTablePram[0][3]);
+}
+
+float getNormalY(float x, float y, float z, double** normalTablePram) {
+	return calZ(x, y, normalTablePram[1][0], normalTablePram[1][1], normalTablePram[1][2], normalTablePram[1][3]);;
+}
+
+float getNormalZ(float x, float y, float z, double** normalTablePram) {
+	return calZ(x, y, normalTablePram[2][0], normalTablePram[2][1], normalTablePram[2][2], normalTablePram[2][3]);;
+}
+
+float getZ(float x, float y, float z, double* zTablePram) {
+	return calZ(x, y, zTablePram[0], zTablePram[1], zTablePram[2], zTablePram[3]);;
+}
+
+float getMidX(GzCoord V1, GzCoord V2, GzCoord V3) {
+	return (V1[0] + V2[0] + V3[0]) / 3;
+}
+
+float getMidY(GzCoord V1, GzCoord V2, GzCoord V3) {
+	return (V1[1] + V2[1] + V3[1]) / 3;
+}
+
+float getMidZ(GzCoord V1, GzCoord V2, GzCoord V3) {
+	return (V1[2] + V2[2] + V3[2]) / 3;
 }
 
 float CalSlope(float x1, float x2, float y1, float y2, bool* flag) {
