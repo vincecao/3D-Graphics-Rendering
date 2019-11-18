@@ -32,6 +32,10 @@ float getMidX(GzCoord V1, GzCoord V2, GzCoord V3);
 float getMidY(GzCoord V1, GzCoord V2, GzCoord V3);
 float getMidZ(GzCoord V1, GzCoord V2, GzCoord V3);
 
+double *zTablePram;
+double **normalTablePram;
+float **result;
+
 int GzRender::GzRotXMat(float degree, GzMatrix mat)
 {
 	/* HW 3.1
@@ -137,7 +141,6 @@ int GzRender::GzTrxMat(GzCoord translate, GzMatrix mat)
 	return GZ_SUCCESS;
 }
 
-
 int GzRender::GzScaleMat(GzCoord scale, GzMatrix mat)
 {
 	/* HW 3.5
@@ -240,6 +243,16 @@ GzRender::GzRender(int xRes, int yRes)
 
 	spec = DEFAULT_SPEC;
 
+	//grass
+	zTablePram = (double *)malloc(4 * sizeof(double));
+	normalTablePram = (double **)malloc(3 * sizeof(double*));
+	for (int i = 0; i < 3; i++)
+		normalTablePram[i] = (double *)malloc(4 * sizeof(double));
+
+	result = (float **)malloc(3 * sizeof(float *));
+	for (int i = 0; i < 3; i++)
+		result[i] = (float *)malloc(8 * sizeof(float));
+
 }
 
 GzRender::~GzRender()
@@ -247,7 +260,9 @@ GzRender::~GzRender()
 	/* HW1.2 clean up, free buffer memory */
 	delete[] framebuffer;
 	delete[] pixelbuffer;
-
+	free(zTablePram);
+	free(normalTablePram);
+	free(result);
 }
 
 int GzRender::GzDefault()
@@ -1798,8 +1813,6 @@ float** GzRender::GzAddGrass(int numParts, GzToken *nameList, GzPointer *valueLi
 				t2[1] = 0;
 				t3[0] = 0;
 				t3[1] = 1;
-
-
 			}
 		}
 
@@ -1836,13 +1849,12 @@ float** GzRender::GzAddGrass(int numParts, GzToken *nameList, GzPointer *valueLi
 }
 
 float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPointer *valueList) {
+
+
 	typedef GzCoord   Coord3[3];
 	int sorted_y[3] = { 0,1,2 };
 
-	double *zTablePram = (double *)malloc(4 * sizeof(double));
-	double **normalTablePram = (double **)malloc(3 * sizeof(double*));
-	for (int i = 0; i < 3; i++)
-		normalTablePram[i] = (double *)malloc(4 * sizeof(double));
+	
 
 	GzCoord *v1, *v2, *v3;
 	GzCoord *n1, *n2, *n3;
@@ -1904,9 +1916,6 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 
 	GzCoord top = { midX + midNx, midY + midNy, midZ + midNz };
 
-	float dY = (*v1)[1] - midY;
-	float dX = (*v1)[0] - midX;
-
 	offsetx = 0.01;
 	offsety = 0.01;
 
@@ -1916,10 +1925,7 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	GzTextureIndex uvBase1 = { -0.5, 0 };
 	GzTextureIndex uvBase2 = { 0, 1 };
 
-
-	float **result = (float **)malloc(3 * sizeof(float *));
-	for (int i = 0; i < 3; i++)
-		result[i] = (float *)malloc(8 * sizeof(float));
+	
 
 	result[0][0] = top[0];
 	result[0][1] = top[1];
@@ -1952,9 +1958,6 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 }
 
 void setNormal(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3, double** normalTablePram) {
-	/*double **normalTablePram = (double **)malloc(3 * sizeof(double*));
-	for (int i = 0; i < 3; i++)
-		normalTablePram[i] = (double *)malloc(4 * sizeof(double));*/
 
 	GzCoord p1, p2, p3, N;
 
