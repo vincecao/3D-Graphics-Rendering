@@ -14,7 +14,7 @@ int getcolor(int, float, GzLight*, GzLight, GzColor, GzColor, GzColor, GzCoord, 
 
 float CalSlope(float x1, float x2, float y1, float y2, bool* flag);
 float CalLoc(float start_y, float slope, float start_x, float end_x, bool flag);
-void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, double* C, double* D,double* flag);
+void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, double* C, double* D, double* flag);
 void vecProduct(GzCoord x, GzCoord y, GzCoord result);
 void crossProduct(GzCoord y, GzCoord z, GzCoord* result);
 float dotproduct(GzCoord x, GzCoord y);
@@ -29,20 +29,21 @@ float getNormalY(float x, float y, float z, double** normalTablePram);
 float getNormalZ(float x, float y, float z, double** normalTablePram);
 float getZ(float x, float y, float z, double* zTablePram);
 void getMid(GzCoord V1, GzCoord V2, GzCoord V3, float* mid);
+void getMidCentroid(GzCoord V1, GzCoord V2, GzCoord V3, float* mid);
 
 double *zTablePram;
 double **normalTablePram;
 float **result;
-float *mid;
+float *midPoint;
 
 float rand_angle() {
 	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / PI));
 }
 float rand_height() {
-	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.1))+0.4;
+	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.1)) + 0.4;
 }
 float rand_base() {
-	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.02))+0.01;
+	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.02)) + 0.01;
 }
 
 
@@ -262,8 +263,8 @@ GzRender::GzRender(int xRes, int yRes)
 	result = (float **)malloc(3 * sizeof(float *));
 	for (int i = 0; i < 3; i++)
 		result[i] = (float *)malloc(8 * sizeof(float));
-	
-	mid = (float *)malloc(3 * sizeof(float));
+
+	midPoint = (float *)malloc(3 * sizeof(float));
 }
 
 GzRender::~GzRender()
@@ -274,7 +275,7 @@ GzRender::~GzRender()
 	free(zTablePram);
 	free(normalTablePram);
 	free(result);
-	free(mid);
+	free(midPoint);
 }
 
 int GzRender::GzDefault()
@@ -1618,7 +1619,7 @@ void rotation(GzCoord a, GzCoord b, GzCoord N, GzCoord*base1, GzCoord* base2) {
 		M[i][i] = pow(N[i], 2) + pow(1 - N[i], 2)*cos(alpha);
 		(*base1)[i] = 0;
 	}
-	
+
 	M[0][1] = N[0] * N[1] * (1 - cos(alpha)) - N[2] * sin(alpha);
 	M[1][0] = N[0] * N[1] * (1 - cos(alpha)) + N[2] * sin(alpha);
 
@@ -1630,7 +1631,7 @@ void rotation(GzCoord a, GzCoord b, GzCoord N, GzCoord*base1, GzCoord* base2) {
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			(*base1)[i] += M[i][j]*a[j];
+			(*base1)[i] += M[i][j] * a[j];
 		}
 		(*base2)[i] = -(*base1)[i];
 		(*base1)[i] += b[i];
@@ -1639,7 +1640,7 @@ void rotation(GzCoord a, GzCoord b, GzCoord N, GzCoord*base1, GzCoord* base2) {
 
 }
 
-float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPointer *valueList) {
+void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPointer *valueList, GzCoord* vertexGrassList, GzCoord* normalGrassList, GzTextureIndex* uvGrassList, float* MidPointFullDetail) {
 
 
 	typedef GzCoord   Coord3[3];
@@ -1648,7 +1649,7 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	GzCoord *v1, *v2, *v3;
 	GzCoord *n1, *n2, *n3;
 	float offsetx, offsety;
-	double A, B, C, D,flag;
+	double A, B, C, D, flag;
 	int temp, first_vertix;
 	Coord3* loc;
 
@@ -1680,11 +1681,15 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	setNormal(*v1, *v2, *v3, *n1, *n2, *n3, normalTablePram);
 	setZ(*v1, *v2, *v3, *n1, *n2, *n3, zTablePram);
 
-	getMid(*v1, *v2, *v3, mid);
+	//Incentre
+	//getMid(*v1, *v2, *v3, midPoint);
 
-	float midX = mid[0];
-	float midY = mid[1];
-	float midZ = mid[2];
+	//Centroid
+	getMidCentroid(*v1, *v2, *v3, midPoint);
+
+	float midX = midPoint[0];
+	float midY = midPoint[1];
+	float midZ = midPoint[2];
 
 	float midNx = getNormalX(midX, midY, midZ, normalTablePram);
 	float midNy = getNormalY(midX, midY, midZ, normalTablePram);
@@ -1699,28 +1704,36 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	midNy /= var;
 	midNz /= var;
 
+	MidPointFullDetail[0] = midX;
+	MidPointFullDetail[1] = midY;
+	MidPointFullDetail[2] = midZ;
+	MidPointFullDetail[3] = midNx;
+	MidPointFullDetail[4] = midNy;
+	MidPointFullDetail[5] = midNz;
+	MidPointFullDetail[6] = 0.5;
+	MidPointFullDetail[7] = 0.5;
 
 	GzCoord top = { midX + midNx * height_scale, midY + midNy * height_scale, midZ + midNz * height_scale };
 
 
-	float dX, dY,dZ;
+	float dX, dY, dZ;
 	dX = (*v1)[0] - midX;
 	dY = (*v1)[1] - midY;
 	dZ = (*v1)[2] - midZ;
 	var = pow(pow(dX, 2) + pow(dY, 2) + pow(dZ, 2), 0.5);
 
-	dX /= var ;
-	dY /= var ;
-	dZ /= var ;
-	GzCoord base = { dX*base_scale, dY*base_scale, dZ*base_scale};
+	dX /= var;
+	dY /= var;
+	dZ /= var;
+	GzCoord base = { dX*base_scale, dY*base_scale, dZ*base_scale };
 	GzCoord N = { midNx, midNy, midNz };
 	GzCoord mid = { midX, midY, midZ };
 
-	GzCoord base1,base2;
+	GzCoord base1, base2;
 
-	rotation(base, mid,N, &base1, &base2);
+	rotation(base, mid, N, &base1, &base2);
 
-	calPlaneParams(base1,base2,top,&A,&B,&C,&D,&flag);
+	calPlaneParams(base1, base2, top, &A, &B, &C, &D, &flag);
 
 	midNx = A;
 	midNy = B;
@@ -1734,8 +1747,6 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	GzTextureIndex uvBase1 = { -0.5, 0 };
 	GzTextureIndex uvBase2 = { 0, 1 };
 
-	
-
 	result[0][0] = top[0];
 	result[0][1] = top[1];
 	result[0][2] = top[2];
@@ -1745,25 +1756,50 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	result[0][6] = uvTop[0];
 	result[0][7] = uvTop[1];
 
-	result[1][0] = base1[0] ;
-	result[1][1] = base1[1] ;
-	result[1][2] = base1[2] ;
+	result[1][0] = base1[0];
+	result[1][1] = base1[1];
+	result[1][2] = base1[2];
 	result[1][3] = midNx;
 	result[1][4] = midNy;
 	result[1][5] = midNz;
 	result[1][6] = uvBase1[0];
 	result[1][7] = uvBase1[1];
 
-	result[2][0] = base2[0] ;
-	result[2][1] = base2[1] ;
-	result[2][2] = base2[2] ;
+	result[2][0] = base2[0];
+	result[2][1] = base2[1];
+	result[2][2] = base2[2];
 	result[2][3] = midNx;
 	result[2][4] = midNy;
 	result[2][5] = midNz;
 	result[2][6] = uvBase2[0];
 	result[2][7] = uvBase2[1];
 
-	return result;
+	vertexGrassList[0][0] = result[0][0];
+	vertexGrassList[0][1] = result[0][1];
+	vertexGrassList[0][2] = result[0][2];
+	vertexGrassList[1][0] = result[1][0];
+	vertexGrassList[1][1] = result[1][1];
+	vertexGrassList[1][2] = result[1][2];
+	vertexGrassList[2][0] = result[2][0];
+	vertexGrassList[2][1] = result[2][1];
+	vertexGrassList[2][2] = result[2][2];
+
+	normalGrassList[0][0] = result[0][3];
+	normalGrassList[0][1] = result[0][4];
+	normalGrassList[0][2] = result[0][5];
+	normalGrassList[1][0] = result[1][3];
+	normalGrassList[1][1] = result[1][4];
+	normalGrassList[1][2] = result[1][5];
+	normalGrassList[2][0] = result[2][3];
+	normalGrassList[2][1] = result[2][4];
+	normalGrassList[2][2] = result[2][5];
+
+	uvGrassList[0][0] = result[0][6];
+	uvGrassList[0][1] = result[0][7];
+	uvGrassList[1][0] = result[1][6];
+	uvGrassList[1][1] = result[1][7];
+	uvGrassList[2][0] = result[2][6];
+	uvGrassList[2][1] = result[2][7];
 }
 
 void setNormal(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3, double** normalTablePram) {
@@ -1774,7 +1810,7 @@ void setNormal(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoo
 		p2[i] = (V2)[i];
 		p3[i] = (V3)[i];
 	}
-	
+
 	for (size_t i = 0; i < 3; i++)
 	{
 		p1[2] = (N1)[i];
@@ -1797,7 +1833,7 @@ void setZ(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3
 		p3[i] = (V3)[i];
 	}
 
-	calPlaneParams(p1, p2, p3, &zTablePram[0], &zTablePram[1], &zTablePram[2], &zTablePram[3],&zTablePram[4]);
+	calPlaneParams(p1, p2, p3, &zTablePram[0], &zTablePram[1], &zTablePram[2], &zTablePram[3], &zTablePram[4]);
 
 	return;
 }
@@ -1828,6 +1864,13 @@ void getMid(GzCoord V1, GzCoord V2, GzCoord V3, float* mid) {
 	mid[2] = (bc * V1[2] + ac * V2[2] + ab * V3[2]) / (bc + ac + ab);
 }
 
+//Centroid of a Triangle
+void getMidCentroid(GzCoord V1, GzCoord V2, GzCoord V3, float* mid) {
+	mid[0] = (V1[0] + V2[0] + V3[0]) / 3;
+	mid[1] = (V1[1] + V2[1] + V3[1]) / 3;
+	mid[2] = (V1[2] + V2[2] + V3[2]) / 3;
+}
+
 float CalSlope(float x1, float x2, float y1, float y2, bool* flag) {
 	float slope;
 	*flag = false;
@@ -1852,14 +1895,14 @@ float CalLoc(float start_y, float slope, float start_x, float end_x, bool flag) 
 	return end_y;
 }
 
-void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, double* C, double* D,double* flag) {
+void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, double* C, double* D, double* flag) {
 	// calPlaneParams(p1,p2,p3,&A1,&B1,&C1,&D1);
 	GzCoord norm;
 	GzCoord e1, e2;
 	if (v1[2] == v2[2] && v2[2] == v3[2]) {
 		*flag = 0;
 		*C = v2[2];
-		
+
 	}
 	else {
 		*flag = 1;
@@ -1872,7 +1915,7 @@ void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, do
 		*B = norm[1];
 		*C = norm[2];
 		*D = -norm[0] * v1[0] - norm[1] * v1[1] - norm[2] * v1[2];
-	
+
 	}
 
 }
@@ -1912,8 +1955,8 @@ int signcheck(float var) {
 	}
 }
 
-float calZ(float x, float y, double A, double B, double C, double D,double flag) {
-	if (flag==0) {
+float calZ(float x, float y, double A, double B, double C, double D, double flag) {
+	if (flag == 0) {
 		return C;
 	}
 	if (C == 0) {
