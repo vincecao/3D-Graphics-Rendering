@@ -28,13 +28,12 @@ float getNormalX(float x, float y, float z, double** normalTablePram);
 float getNormalY(float x, float y, float z, double** normalTablePram);
 float getNormalZ(float x, float y, float z, double** normalTablePram);
 float getZ(float x, float y, float z, double* zTablePram);
-float getMidX(GzCoord V1, GzCoord V2, GzCoord V3);
-float getMidY(GzCoord V1, GzCoord V2, GzCoord V3);
-float getMidZ(GzCoord V1, GzCoord V2, GzCoord V3);
+void getMid(GzCoord V1, GzCoord V2, GzCoord V3, float* mid);
 
 double *zTablePram;
 double **normalTablePram;
 float **result;
+float *mid;
 
 float rand_angle() {
 	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / PI));
@@ -263,7 +262,8 @@ GzRender::GzRender(int xRes, int yRes)
 	result = (float **)malloc(3 * sizeof(float *));
 	for (int i = 0; i < 3; i++)
 		result[i] = (float *)malloc(8 * sizeof(float));
-
+	
+	mid = (float *)malloc(3 * sizeof(float));
 }
 
 GzRender::~GzRender()
@@ -274,6 +274,7 @@ GzRender::~GzRender()
 	free(zTablePram);
 	free(normalTablePram);
 	free(result);
+	free(mid);
 }
 
 int GzRender::GzDefault()
@@ -1679,9 +1680,11 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	setNormal(*v1, *v2, *v3, *n1, *n2, *n3, normalTablePram);
 	setZ(*v1, *v2, *v3, *n1, *n2, *n3, zTablePram);
 
-	float midX = getMidX(*v1, *v2, *v3);
-	float midY = getMidY(*v1, *v2, *v3);
-	float midZ = getMidZ(*v1, *v2, *v3);
+	getMid(*v1, *v2, *v3, mid);
+
+	float midX = mid[0];
+	float midY = mid[1];
+	float midZ = mid[2];
 
 	float midNx = getNormalX(midX, midY, midZ, normalTablePram);
 	float midNy = getNormalY(midX, midY, midZ, normalTablePram);
@@ -1815,16 +1818,14 @@ float getZ(float x, float y, float z, double* zTablePram) {
 	return calZ(x, y, zTablePram[0], zTablePram[1], zTablePram[2], zTablePram[3], zTablePram[4]);
 }
 
-float getMidX(GzCoord V1, GzCoord V2, GzCoord V3) {
-	return (V1[0] + V2[0] + V3[0]) / 3;
-}
-
-float getMidY(GzCoord V1, GzCoord V2, GzCoord V3) {
-	return (V1[1] + V2[1] + V3[1]) / 3;
-}
-
-float getMidZ(GzCoord V1, GzCoord V2, GzCoord V3) {
-	return (V1[2] + V2[2] + V3[2]) / 3;
+//Incentre of a Triangle
+void getMid(GzCoord V1, GzCoord V2, GzCoord V3, float* mid) {
+	float bc = sqrtf(powf(V2[0] - V3[0], 2) + powf(V2[1] - V3[1], 2) + powf(V2[2] - V3[2], 2));
+	float ac = sqrtf(powf(V1[0] - V3[0], 2) + powf(V1[1] - V3[1], 2) + powf(V1[2] - V3[2], 2));
+	float ab = sqrtf(powf(V2[0] - V1[0], 2) + powf(V2[1] - V1[1], 2) + powf(V2[2] - V1[2], 2));
+	mid[0] = (bc * V1[0] + ac * V2[0] + ab * V3[0]) / (bc + ac + ab);
+	mid[1] = (bc * V1[1] + ac * V2[1] + ab * V3[1]) / (bc + ac + ab);
+	mid[2] = (bc * V1[2] + ac * V2[2] + ab * V3[2]) / (bc + ac + ab);
 }
 
 float CalSlope(float x1, float x2, float y1, float y2, bool* flag) {
