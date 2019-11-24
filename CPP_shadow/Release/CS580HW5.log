@@ -1,0 +1,111 @@
+﻿  rend.cpp
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(43): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(46): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(59): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(79): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(80): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(82): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(83): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(103): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(104): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(108): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(109): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(130): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(131): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(133): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(134): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(229): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(254): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(255): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(256): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(293): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(306): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(388): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(400): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(413): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(487): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(499): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(512): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(745): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(864): warning C4305: 'initializing': truncation from 'INT' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(865): warning C4305: 'initializing': truncation from 'INT' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(878): warning C4244: '=': conversion from 'double' to 'char', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(879): warning C4244: '=': conversion from 'double' to 'char', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(880): warning C4244: '=': conversion from 'double' to 'char', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1227): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1228): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1230): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1231): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1233): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1234): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1296): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1360): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1379): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1380): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1422): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1489): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1506): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1507): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1547): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1589): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1654): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1671): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1672): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1712): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1752): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1816): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1833): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1834): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1872): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(1224): warning C4101: 'uvVz': unreferenced local variable
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2048): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2066): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2075): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2096): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2105): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2122): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2139): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2148): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2164): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2184): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2192): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2210): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2214): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2215): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2217): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2218): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2220): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2221): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2287): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2300): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2315): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2316): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2317): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2318): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2385): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2386): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2387): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2388): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2421): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2422): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2423): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2424): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2458): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2459): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2460): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2461): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2494): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2495): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2496): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2497): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2242): warning C4101: 'offsetx': unreferenced local variable
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2242): warning C4101: 'offsety': unreferenced local variable
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2244): warning C4101: 'first_vertix': unreferenced local variable
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2532): warning C4101: 'N': unreferenced local variable
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2553): warning C4101: 'N': unreferenced local variable
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2660): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2680): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2685): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2754): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\csci-580---final-master\cpp_add_curvature\rend.cpp(2770): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  CS580HW5.vcxproj -> \\vmware-host\Shared Folders\Desktop\CSCI-580---Final-master\CPP_add_curvature\.\Release\CS580HW5.exe
