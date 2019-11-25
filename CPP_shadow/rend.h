@@ -25,7 +25,6 @@ public:
 	unsigned short	yres;
 	GzPixel		*pixelbuffer;		/* frame buffer array */
 	char* framebuffer;
-	GzDepth	 *z_map;
 
 	GzCamera		m_camera;
 	GzCamera        m_light;
@@ -90,9 +89,9 @@ public:
 	int GzCalShadowDepth(int numParts, GzToken *nameList, GzPointer *valueList);
 	int GzPushLightMatrix(GzMatrix	matrix);
 	int GzPutLight(GzCamera light);
-	int GzRender::GzFlushDisplay2DepthFile(FILE* outfile);
-	int GzPutZ(int i, int j, GzDepth z);
-	int GzGetZ(int i, int j,  GzDepth	*z);
+	int GzFlushDisplay2DepthFile(FILE* outfile);
+	int GzPutZ(int i, int j, float z);
+	int GzGetZ(int i, int j, float *z);
 
 
 };
