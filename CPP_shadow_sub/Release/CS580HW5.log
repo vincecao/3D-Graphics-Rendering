@@ -1,0 +1,40 @@
+﻿  Application5.cpp
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(92): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(100): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(107): warning C4305: '=': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(108): warning C4305: '=': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(111): warning C4305: '=': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(115): warning C4305: '=': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(121): warning C4305: '=': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(125): warning C4305: '=': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(134): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(135): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(138): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(139): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(140): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(55): warning C4101: 'shaderType': unreferenced local variable
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(49): warning C4101: 'xRes': unreferenced local variable
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(49): warning C4101: 'yRes': unreferenced local variable
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(237): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(244): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(254): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(255): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(261): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(267): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(329): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(335): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(336): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(342): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
+\\vmware-host\shared folders\desktop\csci-580---final-master 6.30.24 pm\cpp_shadow\application5.cpp(348): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
+  CS580HW5.vcxproj -> \\vmware-host\Shared Folders\Desktop\CSCI-580---Final-master 6.30.24 PM\CPP_shadow\.\Release\CS580HW5.exe
