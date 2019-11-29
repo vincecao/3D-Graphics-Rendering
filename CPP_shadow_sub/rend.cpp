@@ -14,7 +14,7 @@ int getcolor(int, float, GzLight*, GzLight, GzColor, GzColor, GzColor, GzCoord, 
 
 float CalSlope(float x1, float x2, float y1, float y2, bool* flag);
 float CalLoc(float start_y, float slope, float start_x, float end_x, bool flag);
-void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, double* C, double* D,double* flag);
+void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, double* C, double* D, double* flag);
 void vecProduct(GzCoord x, GzCoord y, GzCoord result);
 void crossProduct(GzCoord y, GzCoord z, GzCoord* result);
 float dotproduct(GzCoord x, GzCoord y);
@@ -36,14 +36,19 @@ double *zTablePram;
 double **normalTablePram;
 float **result;
 
+void shadowColor(GzIntensity* r, GzIntensity* g, GzIntensity* b) {
+	*r = 3000;
+	*g = 3000;
+	*b = 3000;
+}
 float rand_angle() {
 	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / PI));
 }
 float rand_height() {
-	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.1))+10;
+	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.1)) + 0.4;
 }
 float rand_base() {
-	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.02))+10;
+	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 0.02)) + 0.01;
 }
 float rand_sign() {
 	float a = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 1));
@@ -206,7 +211,7 @@ GzRender::GzRender(int xRes, int yRes)
 	//pixelbuffer = new GzPixel[resolution];
 	framebuffer = (char*)malloc(sizeof(GzPixel) * xres * yres);
 	pixelbuffer = (GzPixel*)malloc(sizeof(GzPixel) * xres * yres);
-	z_map = (GzDepth*)malloc(sizeof(GzDepth) * xres * yres);
+	z_map = (float*)malloc(sizeof(float) * xres * yres);
 
 	/* HW 3.6
 	- setup Xsp and anything only done once
@@ -277,7 +282,7 @@ GzRender::GzRender(int xRes, int yRes)
 	for (int i = 0; i < 3; i++)
 		normalTablePram[i] = (double *)malloc(5 * sizeof(double));
 
-	result = (float **)malloc(3*5 * sizeof(float *));
+	result = (float **)malloc(3 * 5 * sizeof(float *));
 	for (int i = 0; i < 3 * 5; i++)
 		result[i] = (float *)malloc(8 * sizeof(float));
 
@@ -424,7 +429,7 @@ int GzRender::GzBeginRender()
 
 	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < 4; j++){
+		for (int j = 0; j < 4; j++) {
 			m_camera.Xiw[i][j] = 0;
 			m_camera.Xwi[i][j] = 0;
 		}
@@ -440,7 +445,7 @@ int GzRender::GzBeginRender()
 					m_camera.Xiw[j][i] = newX[i];
 					m_camera.Xwi[i][j] = newX[i];
 				}
-					
+
 			}
 			else if (j == 1) {
 				if (i == 3) {
@@ -450,7 +455,7 @@ int GzRender::GzBeginRender()
 					m_camera.Xiw[j][i] = newY[i];
 					m_camera.Xwi[i][j] = newY[i];
 				}
-					
+
 			}
 			else if (j == 2) {
 				if (i == 3) {
@@ -459,7 +464,7 @@ int GzRender::GzBeginRender()
 				else {
 					m_camera.Xiw[j][i] = newZ[i];
 					m_camera.Xwi[i][j] = newZ[i];
-				}	
+				}
 			}
 		}
 	}
@@ -782,13 +787,13 @@ int GzRender::GzPopMatrix()
 	return GZ_SUCCESS;
 }
 
-int GzRender::GzPut(int i, int j, GzIntensity r, GzIntensity g, GzIntensity b, GzIntensity a, GzDepth z)
+int GzRender::GzPut(int i, int j, GzIntensity r, GzIntensity g, GzIntensity b, GzIntensity a, float z)
 {
 	/* HW1.4 write pixel values into the buffer */
 
 	int indexI, indexJ;
 	GzIntensity red, green, blue, alpha;
-	GzDepth depth;
+	float depth;
 
 	indexI = max(min(i, xres - 1), 0);
 	indexJ = max(min(j, yres - 1), 0);
@@ -814,7 +819,7 @@ int GzRender::GzPut(int i, int j, GzIntensity r, GzIntensity g, GzIntensity b, G
 }
 
 
-int GzRender::GzGet(int i, int j, GzIntensity *r, GzIntensity *g, GzIntensity *b, GzIntensity *a, GzDepth *z)
+int GzRender::GzGet(int i, int j, GzIntensity *r, GzIntensity *g, GzIntensity *b, GzIntensity *a, float *z)
 {
 	/* HW1.5 retrieve a pixel information from the pixel buffer */
 
@@ -841,7 +846,7 @@ int GzRender::GzFlushDisplay2File(FILE* outfile)
 
 	if (pixelbuffer == NULL) return GZ_FAILURE;
 
-	for (int i = 0; i <= (xres * yres); i++) {
+	for (int i = 0; i < (xres * yres); i++) {
 
 		GzPixel p = pixelbuffer[i];
 		char pred, pgreen, pblue;
@@ -865,23 +870,23 @@ int GzRender::GzFlushDisplay2DepthFile(FILE* outfile)
 	fprintf(outfile, "P6 %d %d 255\n", xres, yres);
 
 	if (z_map == NULL) return GZ_FAILURE;
-	GzDepth min_z = MAXINT;
-	GzDepth span_z = MAXINT;
-	GzDepth p;
-	for (int i = 0; i <= (xres * yres); i++) {
+	float min_z = MAXINT;
+	float span_z = MAXINT;
+	float p;
+	for (int i = 0; i < (xres * yres); i++) {
 		p = z_map[i];
 		if (p < min_z)
-			min_z=p;
+			min_z = p;
 	}
 	span_z -= min_z;
-	for (int i = 0; i <= (xres * yres); i++) {
+	for (int i = 0; i < (xres * yres); i++) {
 		p = z_map[i];
 		char pred, pgreen, pblue;
 		size_t size = 1, count = 1;
 
 		pred = (p - min_z) / (double)span_z * 255.0;;
 		pgreen = (p - min_z) / (double)span_z * 255.0;;
-		pblue = (p-min_z)/(double)span_z*255.0;
+		pblue = (p - min_z) / (double)span_z*255.0;
 
 		fwrite(&pred, size, count, outfile);
 		fwrite(&pgreen, size, count, outfile);
@@ -903,7 +908,7 @@ int GzRender::GzFlushDisplay2FrameBuffer()
 
 	if (pixelbuffer == NULL || framebuffer == NULL) return GZ_FAILURE;
 
-	for (int i = 0; i <= (xres * yres); i++) {
+	for (int i = 0; i < (xres * yres); i++) {
 
 		GzPixel p = pixelbuffer[i];
 		char fred, fgreen, fblue;
@@ -975,7 +980,7 @@ int GzRender::GzPutAttribute(int numAttributes, GzToken	*nameList, GzPointer *va
 			lights[numlights].color[1] = dir->color[1];
 			lights[numlights].color[2] = dir->color[2];
 			numlights++;
-			
+
 		}
 		else if (token == GZ_AMBIENT_LIGHT)
 		{
@@ -1161,14 +1166,16 @@ int GzRender::GzcalInvertMatrix()
 	return true;
 }
 
-int GzRender::GzCheckShadow(GzCoord input,float *p) {
-	float input4[4],world4[4],light4[4];
-	int nbinarycheck = 0;
+float GzRender::GzCheckShadow(GzCoord input) {
+	CString msg;
+
+	float input4[4], world4[4], light4[4];
+	float nbinarycheck = 0;
 	float checksum = 0;
-	int x, y,x_var,y_var;
-	GzDepth z,z_get;
+	float x = 0, y = 0, x_var = 0, y_var = 0;
+	float z, z_get;
 	for (int i = 0; i < 3; i++) {
-		input4[i]=input[i];
+		input4[i] = input[i];
 	}
 	input4[3] = 1;
 	for (int i = 0; i < 4; i++) {
@@ -1177,9 +1184,16 @@ int GzRender::GzCheckShadow(GzCoord input,float *p) {
 			world4[i] += input4[j] * InvXimage[i][j];
 		}
 	}
+
+
 	for (int i = 0; i < 3; i++) {
-		world4[i] = world4[i]/world4[3];
+		world4[i] = world4[i] / world4[3];
 	}
+
+	msg.Format(_T("world4, %f, %f, %f, %f\n"), world4[0], world4[1], world4[2], world4[3]);
+	//AfxMessageBox(msg);
+
+
 	for (int i = 0; i < 4; i++) {
 		light4[i] = 0;
 		for (int j = 0; j < 4; j++) {
@@ -1189,28 +1203,40 @@ int GzRender::GzCheckShadow(GzCoord input,float *p) {
 	for (int i = 0; i < 3; i++) {
 		light4[i] = light4[i] / light4[3];
 	}
-	
+
 	x = light4[0];
 	y = light4[1];
+	z = light4[2];
+
+	msg.Format(_T("x: %f, y: %f, light4, %f, %f, %f, %f\n"), x, y, light4[0], light4[1], light4[2], light4[3]);
+	//AfxMessageBox(msg);
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			x_var = x-(i - 1);
-			y_var = y - (y - 1);
+			x_var = x - (i - 1);
+			y_var = y - (j - 1);
 			if (x_var >= 0 && y_var < 0 && x_var < xres && y_var < yres) {
 				nbinarycheck++;
 				//could add a small offset -> anti-aliansing
-				GzGetZ(x, y, &z_get);
+				GzGetZ(x_var, y_var, &z_get);
+
+				//msg.Format(_T("GzGetZ, z: %f, z_get: %f\n"), z, z_get);
+				//AfxMessageBox(msg);
+
 				if (z > z_get) {
 					checksum++;
+					//msg.Format(_T("checksum: %f\n"), checksum);
+					//AfxMessageBox(msg);
 				}
 			}
-			
+
 		}
 	}
 	//p is the probability that the pixel is shadow
-	*p = checksum / nbinarycheck;
-	return GZ_SUCCESS;
+
+	msg.Format(_T("checksum, p: %f\n"), (float)(checksum / nbinarycheck));
+	//AfxMessageBox(msg);
+	return (float)(checksum / nbinarycheck);
 }
 int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueList)
 /* numParts - how many names and values */
@@ -1557,7 +1583,7 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 					for (int i = ceil(x1); i <= x2; i++) { //x		
 
 						GzIntensity r = 0, g = 0, b = 0, a = 0;
-						GzDepth z = MAXINT;
+						float z = MAXINT;
 
 
 
@@ -1578,17 +1604,13 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 								tex_fun(cUV[0], cUV[1], texture);
 							}
 
-							
+
 
 							if (newZ < z && newZ >= 0) {
-								GzCoord input = { i,j,newZ};
-								float p;
-								GzCheckShadow(input, &p);
-								//p = 0;
+								GzCoord input = { i, j, newZ };
+								float p = GzCheckShadow(input);
 								if (p > rand_1()) {
-									r = 0;
-									g = 0;
-									b = 0;
+									shadowColor(&r, &g, &b);
 								}
 								else {
 									//if (newZ < z) {
@@ -1695,7 +1717,7 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 					for (int i = ceil(x1); i <= x2; i++) { //x		
 
 						GzIntensity r = 0, g = 0, b = 0, a = 0;
-						GzDepth z = MAXINT;
+						float z = MAXINT;
 
 						if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
 							GzGet(i, j, &r, &g, &b, &a, &z);
@@ -1717,13 +1739,9 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 
 							if (newZ < z && newZ >= 0) {
 								GzCoord input = { i,j,newZ };
-								float p;
-								GzCheckShadow(input, &p);
-								//p = 0;
+								float p = GzCheckShadow(input);
 								if (p > rand_1()) {
-									r = 0;
-									g = 0;
-									b = 0;
+									shadowColor(&r, &g, &b);
 								}
 								else {
 									//if (newZ < z) {
@@ -1871,7 +1889,7 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 				for (int i = ceil(x1); i <= x2; i++) { //x		
 
 					GzIntensity r = 0, g = 0, b = 0, a = 0;
-					GzDepth z = MAXINT;
+					float z = MAXINT;
 
 					if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
 						GzGet(i, j, &r, &g, &b, &a, &z);
@@ -1893,13 +1911,9 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 
 						if (newZ < z && newZ >= 0) {
 							GzCoord input = { i,j,newZ };
-							float p;
-							GzCheckShadow(input, &p);
-							//p = 0;
+							float p = GzCheckShadow(input);
 							if (p > rand_1()) {
-								r = 0;
-								g = 0;
-								b = 0;
+								shadowColor(&r, &g, &b);
 							}
 							else {
 								//if (newZ < z) {
@@ -2044,7 +2058,7 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 				for (int i = ceil(x1); i <= x2; i++) { //x		
 
 					GzIntensity r = 0, g = 0, b = 0, a = 0;
-					GzDepth z = MAXINT;
+					float z = MAXINT;
 
 					if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
 						GzGet(i, j, &r, &g, &b, &a, &z);
@@ -2066,13 +2080,9 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 
 						if (newZ < z && newZ >= 0) {
 							GzCoord input = { i,j,newZ };
-							float p;
-							GzCheckShadow(input, &p);
-							//p = 0;
+							float p = GzCheckShadow(input);
 							if (p > rand_1()) {
-								r = 0;
-								g = 0;
-								b = 0;
+								shadowColor(&r, &g, &b);
 							}
 							else {
 								//if (newZ < z) {
@@ -2123,12 +2133,12 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 
 	return GZ_SUCCESS;
 }
-int GzRender::GzPutZ(int i, int j, GzDepth z) {
+int GzRender::GzPutZ(int i, int j, float z) {
 	/* HW1.4 write pixel values into the buffer */
 
 	int indexI, indexJ;
 
-	GzDepth depth;
+	float depth;
 
 	indexI = max(min(i, xres - 1), 0);
 	indexJ = max(min(j, yres - 1), 0);
@@ -2144,7 +2154,7 @@ int GzRender::GzPutZ(int i, int j, GzDepth z) {
 
 	return GZ_SUCCESS;
 }
-int GzRender::GzGetZ(int i, int j, GzDepth	*z) {
+int GzRender::GzGetZ(int i, int j, float *z) {
 
 	int indexI = max(min(i, xres - 1), 0);
 	int indexJ = max(min(j, yres - 1), 0);
@@ -2220,7 +2230,7 @@ int GzRender::GzCalShadowDepth(int numParts, GzToken *nameList, GzPointer *value
 		GzCoord v2 = { t4d[1][0] / t4d[1][3], t4d[1][1] / t4d[1][3], t4d[1][2] / t4d[1][3] };
 		GzCoord v3 = { t4d[2][0] / t4d[2][3], t4d[2][1] / t4d[2][3], t4d[2][2] / t4d[2][3] };
 
-	
+
 
 		//sort_base_y(v1, v2, v3);
 		if (v1[1] > v2[1]) {
@@ -2295,24 +2305,24 @@ int GzRender::GzCalShadowDepth(int numParts, GzToken *nameList, GzPointer *value
 					float x2 = v1[X] + s13x * deltaY;
 					float zValue1 = v1[Z] + s12z * deltaY;
 					float zValue2 = v1[Z] + s13z * deltaY;
-		
+
 					if (x1 > x2) {
 						swap(x1, x2);
-						swap(zValue1, zValue2);		
+						swap(zValue1, zValue2);
 					}
 
 					//cal z slope in one y
 					float slopeZX = (zValue2 - zValue1) / (x2 - x1);
 
 					for (int i = ceil(x1); i <= x2; i++) { //x		
-						GzDepth z = MAXINT;
+						float z = MAXINT;
 
 						if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
-							GzGetZ(i, j,  &z);
+							GzGetZ(i, j, &z);
 							float newZ = zValue1 + slopeZX * (i - x1);
 
 							if (newZ < z && newZ >= 0) {
-								
+
 								GzPutZ(i, j, newZ);
 							}
 
@@ -2328,21 +2338,21 @@ int GzRender::GzCalShadowDepth(int numParts, GzToken *nameList, GzPointer *value
 					if (x1 > x2) {
 						swap(x1, x2);
 						swap(zValue1, zValue2);
-						
+
 					}
 
 					//cal z slope in one y
 					float slopeZX = (zValue2 - zValue1) / (x2 - x1);
 
 					for (int i = ceil(x1); i <= x2; i++) { //x		
-						GzDepth z = MAXINT;
+						float z = MAXINT;
 
 						if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
-							GzGetZ(i, j,  &z);
+							GzGetZ(i, j, &z);
 							float newZ = zValue1 + slopeZX * (i - x1);
-					
+
 							if (newZ < z && newZ >= 0) {
-						
+
 								GzPutZ(i, j, newZ);
 							}
 
@@ -2379,12 +2389,12 @@ int GzRender::GzCalShadowDepth(int numParts, GzToken *nameList, GzPointer *value
 
 				for (int i = ceil(x1); i <= x2; i++) { //x		
 
-					GzDepth z = MAXINT;
+					float z = MAXINT;
 
 					if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
 						GzGetZ(i, j, &z);
 						float newZ = zValue1 + slopeZX * (i - x1);
-					
+
 						if (newZ < z && newZ >= 0) {
 							GzPutZ(i, j, newZ);
 						}
@@ -2415,16 +2425,16 @@ int GzRender::GzCalShadowDepth(int numParts, GzToken *nameList, GzPointer *value
 				if (x1 > x2) {
 					swap(x1, x2);
 					swap(zValue1, zValue2);
-					
+
 				}
 
 				//cal z slope in one y
 				float slopeZX = (zValue2 - zValue1) / (x2 - x1);
-				
+
 
 				for (int i = ceil(x1); i <= x2; i++) { //x		
 
-					GzDepth z = MAXINT;
+					float z = MAXINT;
 
 					if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
 						GzGetZ(i, j, &z);
@@ -2451,7 +2461,7 @@ void rotation(GzCoord a, GzCoord b, GzCoord N, GzCoord*base1, GzCoord* base2) {
 		M[i][i] = pow(N[i], 2) + pow(1 - N[i], 2)*cos(alpha);
 		(*base1)[i] = 0;
 	}
-	
+
 	M[0][1] = N[0] * N[1] * (1 - cos(alpha)) - N[2] * sin(alpha);
 	M[1][0] = N[0] * N[1] * (1 - cos(alpha)) + N[2] * sin(alpha);
 
@@ -2463,7 +2473,7 @@ void rotation(GzCoord a, GzCoord b, GzCoord N, GzCoord*base1, GzCoord* base2) {
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			(*base1)[i] += M[i][j]*a[j];
+			(*base1)[i] += M[i][j] * a[j];
 		}
 		(*base2)[i] = -(*base1)[i];
 		(*base1)[i] += b[i];
@@ -2481,7 +2491,7 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	GzCoord *v1, *v2, *v3;
 	GzCoord *n1, *n2, *n3;
 	float offsetx, offsety;
-	double A, B, C, D,flag;
+	double A, B, C, D, flag;
 	int temp, first_vertix;
 	Coord3* loc;
 
@@ -2534,24 +2544,24 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	GzCoord top = { midX + midNx * height_scale, midY + midNy * height_scale, midZ + midNz * height_scale };
 
 
-	float dX, dY,dZ;
+	float dX, dY, dZ;
 	dX = (*v1)[0] - midX;
 	dY = (*v1)[1] - midY;
 	dZ = (*v1)[2] - midZ;
 	var = pow(pow(dX, 2) + pow(dY, 2) + pow(dZ, 2), 0.5);
 
-	dX /= var ;
-	dY /= var ;
-	dZ /= var ;
-	GzCoord base = { dX*base_scale, dY*base_scale, dZ*base_scale};
+	dX /= var;
+	dY /= var;
+	dZ /= var;
+	GzCoord base = { dX*base_scale, dY*base_scale, dZ*base_scale };
 	GzCoord N = { midNx, midNy, midNz };
 	GzCoord mid = { midX, midY, midZ };
 
-	GzCoord base1,base2;
+	GzCoord base1, base2;
 
-	rotation(base, mid,N, &base1, &base2);
+	rotation(base, mid, N, &base1, &base2);
 
-	calPlaneParams(base1,base2,top,&A,&B,&C,&D,&flag);
+	calPlaneParams(base1, base2, top, &A, &B, &C, &D, &flag);
 
 	midNx = A;
 	midNy = B;
@@ -2571,29 +2581,29 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	dY = top[1] - base1[1];
 	dZ = top[2] - base1[2];
 	float c = rand_curve();
-	float curve[5] = {0,c/200,c/20,c/10,c};
+	float curve[5] = { 0,c / 200,c / 20,c / 10,c };
 	float sign = rand_sign();
 
-	L32[0] = dX * 1 / 3 + base1[0] + midNx*curve[0]*sign;
-	L32[1] = dY * 1 / 3 + base1[1] + midNy*curve[0]*sign;
-	L32[2] = dZ * 1 / 3 + base1[2] + midNz*curve[0]*sign;
-	L31[0] = dX * 2 / 3 + base1[0] + midNx*curve[2]*sign;
-	L31[1] = dY * 2 / 3 + base1[1] + midNy*curve[2]*sign;
-	L31[2] = dZ * 2 / 3 + base1[2] + midNz*curve[2]*sign;
+	L32[0] = dX * 1 / 3 + base1[0] + midNx * curve[0] * sign;
+	L32[1] = dY * 1 / 3 + base1[1] + midNy * curve[0] * sign;
+	L32[2] = dZ * 1 / 3 + base1[2] + midNz * curve[0] * sign;
+	L31[0] = dX * 2 / 3 + base1[0] + midNx * curve[2] * sign;
+	L31[1] = dY * 2 / 3 + base1[1] + midNy * curve[2] * sign;
+	L31[2] = dZ * 2 / 3 + base1[2] + midNz * curve[2] * sign;
 	dX = top[0] - base2[0];
 	dY = top[1] - base2[1];
 	dZ = top[2] - base2[2];
-	R32[0] = dX * 1 / 3 + base2[0] + midNx*curve[1]*sign;
-	R32[1] = dY * 1 / 3 + base2[1] + midNy*curve[1]*sign;
-	R32[2] = dZ * 1 / 3 + base2[2] + midNz*curve[1]*sign;
-	R31[0] = dX * 2 / 3 + base2[0] + midNx*curve[3]*sign;
-	R31[1] = dY * 2 / 3 + base2[1] + midNy*curve[3]*sign;
-	R31[2] = dZ * 2 / 3 + base2[2] + midNz*curve[3]*sign;
+	R32[0] = dX * 1 / 3 + base2[0] + midNx * curve[1] * sign;
+	R32[1] = dY * 1 / 3 + base2[1] + midNy * curve[1] * sign;
+	R32[2] = dZ * 1 / 3 + base2[2] + midNz * curve[1] * sign;
+	R31[0] = dX * 2 / 3 + base2[0] + midNx * curve[3] * sign;
+	R31[1] = dY * 2 / 3 + base2[1] + midNy * curve[3] * sign;
+	R31[2] = dZ * 2 / 3 + base2[2] + midNz * curve[3] * sign;
 	top[0] += midNx * curve[4];
 	top[1] += midNy * curve[4];
-	top[2] += midNz *curve[4];
+	top[2] += midNz * curve[4];
 
-// tri 1
+	// tri 1
 	result[0][0] = L32[0];
 	result[0][1] = L32[1];
 	result[0][2] = L32[2];
@@ -2620,7 +2630,7 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	result[2][5] = midNz;
 	result[2][6] = uvBase2[0];
 	result[2][7] = uvBase2[1];
-//tri 2
+	//tri 2
 	calPlaneParams(L32, base2, R32, &A, &B, &C, &D, &flag);
 
 	midNx = A;
@@ -2728,7 +2738,7 @@ float** GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPo
 	result[11][4] = midNy;
 	result[11][5] = midNz;
 	result[11][6] = uvBase2[0];
-	result[11][7] = uvBase2[1];	
+	result[11][7] = uvBase2[1];
 	//tri 5
 	calPlaneParams(R31, L31, top, &A, &B, &C, &D, &flag);
 
@@ -2776,7 +2786,7 @@ void setNormal(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoo
 		p2[i] = (V2)[i];
 		p3[i] = (V3)[i];
 	}
-	
+
 	for (size_t i = 0; i < 3; i++)
 	{
 		p1[2] = (N1)[i];
@@ -2799,7 +2809,7 @@ void setZ(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3
 		p3[i] = (V3)[i];
 	}
 
-	calPlaneParams(p1, p2, p3, &zTablePram[0], &zTablePram[1], &zTablePram[2], &zTablePram[3],&zTablePram[4]);
+	calPlaneParams(p1, p2, p3, &zTablePram[0], &zTablePram[1], &zTablePram[2], &zTablePram[3], &zTablePram[4]);
 
 	return;
 }
@@ -2856,14 +2866,14 @@ float CalLoc(float start_y, float slope, float start_x, float end_x, bool flag) 
 	return end_y;
 }
 
-void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, double* C, double* D,double* flag) {
+void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, double* C, double* D, double* flag) {
 	// calPlaneParams(p1,p2,p3,&A1,&B1,&C1,&D1);
 	GzCoord norm;
 	GzCoord e1, e2;
 	if (v1[2] == v2[2] && v2[2] == v3[2]) {
 		*flag = 0;
 		*C = v2[2];
-		
+
 	}
 	else {
 		*flag = 1;
@@ -2876,7 +2886,7 @@ void calPlaneParams(GzCoord v1, GzCoord v2, GzCoord v3, double* A, double* B, do
 		*B = norm[1];
 		*C = norm[2];
 		*D = -norm[0] * v1[0] - norm[1] * v1[1] - norm[2] * v1[2];
-	
+
 	}
 
 }
@@ -2916,8 +2926,8 @@ int signcheck(float var) {
 	}
 }
 
-float calZ(float x, float y, double A, double B, double C, double D,double flag) {
-	if (flag==0) {
+float calZ(float x, float y, double A, double B, double C, double D, double flag) {
+	if (flag == 0) {
 		return C;
 	}
 	if (C == 0) {

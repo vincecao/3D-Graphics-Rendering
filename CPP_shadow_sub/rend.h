@@ -25,7 +25,7 @@ public:
 	unsigned short	yres;
 	GzPixel		*pixelbuffer;		/* frame buffer array */
 	char* framebuffer;
-	GzDepth	 *z_map;
+	float	 *z_map;
 
 	GzCamera		m_camera;
 	GzCamera        m_light;
@@ -58,8 +58,8 @@ public:
 	// HW1: Display methods
 	int GzDefault();
 	int GzBeginRender();
-	int GzPut(int i, int j, GzIntensity r, GzIntensity g, GzIntensity b, GzIntensity a, GzDepth z);
-	int GzGet(int i, int j, GzIntensity *r, GzIntensity *g, GzIntensity *b, GzIntensity *a, GzDepth	*z);
+	int GzPut(int i, int j, GzIntensity r, GzIntensity g, GzIntensity b, GzIntensity a, float z);
+	int GzGet(int i, int j, GzIntensity *r, GzIntensity *g, GzIntensity *b, GzIntensity *a, float	*z);
 
 	int GzFlushDisplay2File(FILE* outfile);
 	int GzFlushDisplay2FrameBuffer();
@@ -93,10 +93,10 @@ public:
 	int GzPushLightMatrix(GzMatrix	matrix);
 	int GzPutLight(GzCamera light);
 	int GzRender::GzFlushDisplay2DepthFile(FILE* outfile);
-	int GzPutZ(int i, int j, GzDepth z);
-	int GzGetZ(int i, int j,  GzDepth	*z);
+	int GzPutZ(int i, int j, float z);
+	int GzGetZ(int i, int j, float	*z);
 	int GzcalInvertMatrix();
-	int GzCheckShadow(GzCoord input, float *p);
+	float GzCheckShadow(GzCoord input);
 
 
 
