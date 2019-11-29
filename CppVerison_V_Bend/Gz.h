@@ -45,11 +45,11 @@ typedef void    *GzPointer;
 typedef float   GzColor[3];
 typedef short   GzIntensity;	/* 0-4095 in lower 12-bits for RGBA */
 typedef float	GzCoord[3];
-typedef float	GzTextureIndex[2];
+typedef float	GzTextureIndex[3];
 typedef float	GzMatrix[4][4];
 typedef int	GzDepth;		/* signed z for clipping */
 
-typedef	int	(*GzTexture)(float u, float v, GzColor color);	/* pointer to texture lookup method */
+typedef	int	(*GzTexture)(float u, float v, float w, GzColor color);	/* pointer to texture lookup method */
 /* u,v parameters [0,1] are defined tex_fun(float u, float v, GzColor color) */
 
 /*

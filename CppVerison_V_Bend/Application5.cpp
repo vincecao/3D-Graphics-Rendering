@@ -22,8 +22,8 @@ static char THIS_FILE[] = __FILE__;
 #define OUTFILE "output.ppm"
 
 
-extern int tex_fun(float u, float v, GzColor color); /* image texture function */
-extern int ptex_fun(float u, float v, GzColor color); /* procedural texture function */
+extern int tex_fun(float u, float v, float w, GzColor color); /* image texture function */
+extern int ptex_fun(float u, float v, float w, GzColor color); /* procedural texture function */
 extern int GzFreeTexture();
 void recursive(GzCoord* vertexList, GzCoord* normalList, GzTextureIndex* uvList, float* midPoint, GzRender* m_pRender, GzToken* nameListTriangle, int count);
 void shade(GzCoord norm, GzCoord color);
@@ -172,10 +172,10 @@ int Application5::Initialize()
 	valueListShader[4] = (GzPointer)&specpower;
 
 	nameListShader[5] = GZ_TEXTURE_MAP;
-#if 1  /* set up null texture function or valid pointer */
+#if 0  /* set up null texture function or valid pointer */
 	valueListShader[5] = (GzPointer)0;
 #else
-	valueListShader[5] = (GzPointer)(tex_fun);	/* or use ptex_fun */
+	valueListShader[5] = (GzPointer)(ptex_fun);	/* or use ptex_fun */
 #endif
 	status |= m_pRender->GzPutAttribute(6, nameListShader, valueListShader);
 
@@ -267,7 +267,11 @@ int Application5::Render()
 		 * NOTE: this sequence matches the nameList token sequence
 		 */
 
-		 //get first midpoint
+		uvList[0][2] = 0;
+		uvList[1][2] = 0;
+		uvList[2][2] = 0;
+
+		//get first midpoint
 		valueListTriangle[0] = (GzPointer)vertexList;
 		valueListTriangle[1] = (GzPointer)normalList;
 		valueListTriangle[2] = (GzPointer)uvList;
@@ -289,7 +293,7 @@ int Application5::Render()
 			m_pRender->GzPutTriangle(3, nameListTriangle, valueListGrassTriangle[i]);
 		}
 
-	
+
 		//make each point interact with midpoint
 		int count = 0;
 		recursive(vertexList, normalList, uvList, midPoint, m_pRender, nameListTriangle, count);
@@ -322,7 +326,7 @@ int Application5::Render()
 
 
 float distance(float x1, float y1, float z1, float x2, float y2, float z2) {
-	return pow(pow(x1-x2, 2) + pow(y1-y2, 2) + pow(z1-z2, 2), 0.5);
+	return pow(pow(x1 - x2, 2) + pow(y1 - y2, 2) + pow(z1 - z2, 2), 0.5);
 }
 
 void recursive(GzCoord* vertexList, GzCoord* normalList, GzTextureIndex* uvList, float* midPoint, GzRender* m_pRender, GzToken* nameListTriangle, int count) {
@@ -334,9 +338,9 @@ void recursive(GzCoord* vertexList, GzCoord* normalList, GzTextureIndex* uvList,
 
 	GzPointer	valueListGrassTriangle[5][3];
 
-	GzCoord*		vertexGrassList[5];	
-	GzCoord*		normalGrassList[5];	
-	GzTextureIndex* uvGrassList[5];		
+	GzCoord*		vertexGrassList[5];
+	GzCoord*		normalGrassList[5];
+	GzTextureIndex* uvGrassList[5];
 
 	for (int i = 0; i < 5; i++) {
 		vertexGrassList[i] = (GzCoord *)malloc(3 * sizeof(GzCoord));

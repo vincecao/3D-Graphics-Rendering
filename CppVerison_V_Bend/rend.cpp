@@ -764,6 +764,8 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 		GzCoord* nP = (GzCoord*)valueList[1];	//norm
 		GzTextureIndex* uvP = (GzTextureIndex*)valueList[2];
 
+		//float w = uvP[0][2];
+
 		float v4d[3][4];
 		float n4d[3][4];
 		//GzCoord v4d[4];
@@ -815,17 +817,6 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 			}
 		}
 
-		//if (t4d[0][2] < m_camera.position[2] || t4d[1][2] < m_camera.position[2] || t4d[2][2] < m_camera.position[2]) return GZ_FAILURE;
-
-		/*
-		// V1:
-			vP[0][0], vP[0][1], vP[0][2];
-		// V2:
-			vP[1][0], vP[1][1], vP[1][2];
-		// V3:
-			vP[2][0], vP[2][1], vP[2][2];
-		*/
-
 		GzCoord v1 = { t4d[0][0] / t4d[0][3], t4d[0][1] / t4d[0][3], t4d[0][2] / t4d[0][3] }; //x, y, z
 		GzCoord v2 = { t4d[1][0] / t4d[1][3], t4d[1][1] / t4d[1][3], t4d[1][2] / t4d[1][3] };
 		GzCoord v3 = { t4d[2][0] / t4d[2][3], t4d[2][1] / t4d[2][3], t4d[2][2] / t4d[2][3] };
@@ -842,9 +833,11 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 		GzColor color_v2 = { 0, 0, 0 };
 		GzColor color_v3 = { 0, 0, 0 };
 
-		GzTextureIndex uv1 = { uvP[0][0], uvP[0][1] };
-		GzTextureIndex uv2 = { uvP[1][0], uvP[1][1] };
-		GzTextureIndex uv3 = { uvP[2][0], uvP[2][1] };
+		GzTextureIndex uv1 = { uvP[0][0], uvP[0][1], uvP[0][2] };
+		GzTextureIndex uv2 = { uvP[1][0], uvP[1][1], uvP[1][2] };
+		GzTextureIndex uv3 = { uvP[2][0], uvP[2][1], uvP[2][2] };
+
+
 
 		if (tex_fun != NULL && interp_mode == GZ_COLOR)
 		{
@@ -1099,7 +1092,7 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 
 								cUV[0] *= (para_uv + 1.0);
 								cUV[1] *= (para_uv + 1.0);
-								tex_fun(cUV[0], cUV[1], texture);
+								tex_fun(cUV[0], cUV[1], uv1[2], texture);
 							}
 
 
@@ -1226,7 +1219,7 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 
 								cUV[0] *= (para_uv + 1.0);
 								cUV[1] *= (para_uv + 1.0);
-								tex_fun(cUV[0], cUV[1], texture);
+								tex_fun(cUV[0], cUV[1], uv1[2], texture);
 							}
 
 
@@ -1391,7 +1384,7 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 
 							cUV[0] *= (para_uv + 1.0);
 							cUV[1] *= (para_uv + 1.0);
-							tex_fun(cUV[0], cUV[1], texture);
+							tex_fun(cUV[0], cUV[1], uv1[2], texture);
 						}
 
 
@@ -1553,7 +1546,7 @@ int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueLis
 
 							cUV[0] *= (para_uv + 1.0);
 							cUV[1] *= (para_uv + 1.0);
-							tex_fun(cUV[0], cUV[1], texture);
+							tex_fun(cUV[0], cUV[1], uv1[2], texture);
 						}
 
 
@@ -1739,6 +1732,10 @@ void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPoint
 	GzTextureIndex uvTop = { 0.5,0 };
 	GzTextureIndex uvBase1 = { -0.5, 0 };
 	GzTextureIndex uvBase2 = { 0, 1 };
+	GzTextureIndex uvL31 = { -0.5 / 3.0, 1.0 / 3.0 * 2.0 };
+	GzTextureIndex uvL32 = { -0.5 / 3.0*2.0, 1.0 / 3.0 };
+	GzTextureIndex uvR31 = { 0.5 / 3.0, 1.0 / 3.0 * 2.0 };
+	GzTextureIndex uvR32 = { 0.5 / 3.0*2.0, 1.0 / 3.0 };
 
 	// get the 1/3 of the triangle
 	GzCoord L32, L31, R32, R31;
@@ -1790,13 +1787,16 @@ void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPoint
 	normalGrassList[0][2][1] = midNy;
 	normalGrassList[0][2][2] = midNz;
 
-	uvGrassList[0][0][0] = uvTop[0];
-	uvGrassList[0][0][1] = uvTop[1];
+	uvGrassList[0][0][0] = uvL32[0];
+	uvGrassList[0][0][1] = uvL32[1];
 	uvGrassList[0][1][0] = uvBase1[0];
 	uvGrassList[0][1][1] = uvBase1[1];
 	uvGrassList[0][2][0] = uvBase2[0];
 	uvGrassList[0][2][1] = uvBase2[1];
 
+	uvGrassList[0][0][2] = 99;
+	uvGrassList[0][1][2] = 99;
+	uvGrassList[0][2][2] = 99;
 
 	//tri 2
 	calPlaneParams(L32, base2, R32, &A, &B, &C, &D, &flag);
@@ -1829,13 +1829,16 @@ void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPoint
 	normalGrassList[1][2][1] = midNy;
 	normalGrassList[1][2][2] = midNz;
 
-	uvGrassList[1][0][0] = uvTop[0];
-	uvGrassList[1][0][1] = uvTop[1];
-	uvGrassList[1][1][0] = uvBase1[0];
-	uvGrassList[1][1][1] = uvBase1[1];
+	uvGrassList[1][0][0] = uvL32[0];
+	uvGrassList[1][0][1] = uvL32[1];
+	uvGrassList[1][1][0] = uvR32[0];
+	uvGrassList[1][1][1] = uvR32[1];
 	uvGrassList[1][2][0] = uvBase2[0];
 	uvGrassList[1][2][1] = uvBase2[1];
 
+	uvGrassList[1][0][2] = 99;
+	uvGrassList[1][1][2] = 99;
+	uvGrassList[1][2][2] = 99;
 
 	//tri 3
 	calPlaneParams(L32, L31, R32, &A, &B, &C, &D, &flag);
@@ -1868,12 +1871,16 @@ void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPoint
 	normalGrassList[2][2][1] = midNy;
 	normalGrassList[2][2][2] = midNz;
 
-	uvGrassList[2][0][0] = uvTop[0];
-	uvGrassList[2][0][1] = uvTop[1];
-	uvGrassList[2][1][0] = uvBase1[0];
-	uvGrassList[2][1][1] = uvBase1[1];
-	uvGrassList[2][2][0] = uvBase2[0];
-	uvGrassList[2][2][1] = uvBase2[1];
+	uvGrassList[2][0][0] = uvL32[0];
+	uvGrassList[2][0][1] = uvL32[1];
+	uvGrassList[2][1][0] = uvR32[0];
+	uvGrassList[2][1][1] = uvR32[1];
+	uvGrassList[2][2][0] = uvL31[0];
+	uvGrassList[2][2][1] = uvL31[1];
+
+	uvGrassList[2][0][2] = 99;
+	uvGrassList[2][1][2] = 99;
+	uvGrassList[2][2][2] = 99;
 
 	//tri 4
 	calPlaneParams(R31, L31, R32, &A, &B, &C, &D, &flag);
@@ -1906,12 +1913,16 @@ void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPoint
 	normalGrassList[3][2][1] = midNy;
 	normalGrassList[3][2][2] = midNz;
 
-	uvGrassList[3][0][0] = uvTop[0];
-	uvGrassList[3][0][1] = uvTop[1];
-	uvGrassList[3][1][0] = uvBase1[0];
-	uvGrassList[3][1][1] = uvBase1[1];
-	uvGrassList[3][2][0] = uvBase2[0];
-	uvGrassList[3][2][1] = uvBase2[1];
+	uvGrassList[3][0][0] = uvR31[0];
+	uvGrassList[3][0][1] = uvR31[1];
+	uvGrassList[3][1][0] = uvR32[0];
+	uvGrassList[3][1][1] = uvR32[1];
+	uvGrassList[3][2][0] = uvL31[0];
+	uvGrassList[3][2][1] = uvL31[1];
+
+	uvGrassList[3][0][2] = 99;
+	uvGrassList[3][1][2] = 99;
+	uvGrassList[3][2][2] = 99;
 
 	//tri 5
 	calPlaneParams(R31, L31, top, &A, &B, &C, &D, &flag);
@@ -1944,13 +1955,16 @@ void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPoint
 	normalGrassList[4][2][1] = midNy;
 	normalGrassList[4][2][2] = midNz;
 
-	uvGrassList[4][0][0] = uvTop[0];
-	uvGrassList[4][0][1] = uvTop[1];
-	uvGrassList[4][1][0] = uvBase1[0];
-	uvGrassList[4][1][1] = uvBase1[1];
-	uvGrassList[4][2][0] = uvBase2[0];
-	uvGrassList[4][2][1] = uvBase2[1];
+	uvGrassList[4][0][0] = uvR31[0];
+	uvGrassList[4][0][1] = uvR31[1];
+	uvGrassList[4][1][0] = uvTop[0];
+	uvGrassList[4][1][1] = uvTop[1];
+	uvGrassList[4][2][0] = uvL31[0];
+	uvGrassList[4][2][1] = uvL31[1];
 
+	uvGrassList[4][0][2] = 99;
+	uvGrassList[4][1][2] = 99;
+	uvGrassList[4][2][2] = 99;
 }
 
 void setNormal(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3, double** normalTablePram) {
