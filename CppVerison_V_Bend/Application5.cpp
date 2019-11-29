@@ -198,15 +198,15 @@ int Application5::Render()
 
 	GzPointer	valueListTriangle[3]; 	/* vertex attribute pointers */
 
-	GzPointer	valueListGrassTriangle[3];
+	GzPointer*	valueListGrassTriangle[5];
 
 	GzCoord		vertexList[3];	/* vertex position coordinates */
 	GzCoord		normalList[3];	/* vertex normals */
 	GzTextureIndex uvList[3];		/* vertex texture map indices */
 
-	GzCoord		vertexGrassList[3];
-	GzCoord		normalGrassList[3];
-	GzTextureIndex uvGrassList[3];
+	GzCoord*		vertexGrassList[5];	/* vertex position coordinates */
+	GzCoord*		normalGrassList[5];	/* vertex normals */
+	GzTextureIndex* uvGrassList[5];		/* vertex texture map indices */
 
 	char		dummy[256];
 	int			status;
@@ -267,26 +267,35 @@ int Application5::Render()
 		 * NOTE: this sequence matches the nameList token sequence
 		 */
 
-		//get first midpoint
+		 //get first midpoint
 		valueListTriangle[0] = (GzPointer)vertexList;
 		valueListTriangle[1] = (GzPointer)normalList;
 		valueListTriangle[2] = (GzPointer)uvList;
 
 		float *midPoint = (float *)malloc(8 * sizeof(float));
-		m_pRender->GzAddGrassWithModelSpace(3, nameListTriangle, valueListTriangle, vertexGrassList, normalGrassList, uvGrassList, midPoint);
-		valueListGrassTriangle[0] = (GzPointer)vertexGrassList;
-		valueListGrassTriangle[1] = (GzPointer)normalGrassList;
-		valueListGrassTriangle[2] = (GzPointer)uvGrassList;
-		m_pRender->GzPutTriangle(3, nameListTriangle, valueListGrassTriangle);
-		
+		for (int i = 0; i < 5; i++) {
+			vertexGrassList[i] = (GzCoord *)malloc(3 * sizeof(GzCoord));
+			normalGrassList[i] = (GzCoord *)malloc(3 * sizeof(GzCoord));
+			uvGrassList[i] = (GzTextureIndex*)malloc(3 * sizeof(GzTextureIndex));
+			valueListGrassTriangle[i] = (GzPointer *)malloc(3 * sizeof(GzPointer));
+		}
 
+		m_pRender->GzAddGrassWithModelSpace(3, nameListTriangle, valueListTriangle, vertexGrassList, normalGrassList, uvGrassList, midPoint);
+
+		for (int i = 0; i < 5; i++) {
+			valueListGrassTriangle[i][0] = (GzPointer)vertexGrassList[i];
+			valueListGrassTriangle[i][1] = (GzPointer)normalGrassList[i];
+			valueListGrassTriangle[i][2] = (GzPointer)uvGrassList[i];
+			m_pRender->GzPutTriangle(3, nameListTriangle, valueListGrassTriangle[i]);
+		}
+
+	
 		//make each point interact with midpoint
 		int count = 0;
 		recursive(vertexList, normalList, uvList, midPoint, m_pRender, nameListTriangle, count);
 		free(midPoint);
-		
-		m_pRender->GzPutTriangle(3, nameListTriangle, valueListTriangle);
 
+		m_pRender->GzPutTriangle(3, nameListTriangle, valueListTriangle);
 
 	}
 
@@ -296,6 +305,8 @@ int Application5::Render()
 	/*
 	 * Close file
 	 */
+
+
 
 	if (fclose(infile))
 		AfxMessageBox(_T("The input file was not closed\n"));
@@ -309,16 +320,29 @@ int Application5::Render()
 		return(GZ_SUCCESS);
 }
 
+
+float distance(float x1, float y1, float z1, float x2, float y2, float z2) {
+	return pow(pow(x1-x2, 2) + pow(y1-y2, 2) + pow(z1-z2, 2), 0.5);
+}
+
 void recursive(GzCoord* vertexList, GzCoord* normalList, GzTextureIndex* uvList, float* midPoint, GzRender* m_pRender, GzToken* nameListTriangle, int count) {
-	if (count == 2) return;
+	if (count == 4 || distance(vertexList[0][0], vertexList[0][1], vertexList[0][2], midPoint[0], midPoint[1], midPoint[2]) < 0.1) return;
 	GzPointer TempListTriangle[3];
 	GzCoord		TempVertexList[3];
 	GzCoord		TempNormalList[3];
 	GzTextureIndex TempUVList[3];
-	GzCoord		vertexGrassList[3];
-	GzCoord		normalGrassList[3];
-	GzTextureIndex uvGrassList[3];
-	GzPointer	valueListGrassTriangle[3];
+
+	GzPointer	valueListGrassTriangle[5][3];
+
+	GzCoord*		vertexGrassList[5];	
+	GzCoord*		normalGrassList[5];	
+	GzTextureIndex* uvGrassList[5];		
+
+	for (int i = 0; i < 5; i++) {
+		vertexGrassList[i] = (GzCoord *)malloc(3 * sizeof(GzCoord));
+		normalGrassList[i] = (GzCoord *)malloc(3 * sizeof(GzCoord));
+		uvGrassList[i] = (GzTextureIndex*)malloc(3 * sizeof(GzTextureIndex));
+	}
 
 	for (int k = 0; k < 3; k++) {
 
@@ -344,12 +368,17 @@ void recursive(GzCoord* vertexList, GzCoord* normalList, GzTextureIndex* uvList,
 		TempListTriangle[2] = (GzPointer)TempUVList;
 
 		m_pRender->GzAddGrassWithModelSpace(3, nameListTriangle, TempListTriangle, vertexGrassList, normalGrassList, uvGrassList, midPoint);
-		valueListGrassTriangle[0] = (GzPointer)vertexGrassList;
-		valueListGrassTriangle[1] = (GzPointer)normalGrassList;
-		valueListGrassTriangle[2] = (GzPointer)uvGrassList;
-		m_pRender->GzPutTriangle(3, nameListTriangle, valueListGrassTriangle);
-		recursive(TempVertexList, TempNormalList, TempUVList, midPoint, m_pRender, nameListTriangle, count+1);
+
+		for (int i = 0; i < 5; i++) {
+			valueListGrassTriangle[i][0] = (GzPointer)vertexGrassList[i];
+			valueListGrassTriangle[i][1] = (GzPointer)normalGrassList[i];
+			valueListGrassTriangle[i][2] = (GzPointer)uvGrassList[i];
+			m_pRender->GzPutTriangle(3, nameListTriangle, valueListGrassTriangle[i]);
+		}
+
+		recursive(TempVertexList, TempNormalList, TempUVList, midPoint, m_pRender, nameListTriangle, count + 1);
 	}
+
 }
 
 int Application5::Clean()

@@ -59,7 +59,7 @@ public:
 	int GzPutAttribute(int numAttributes, GzToken *nameList, GzPointer *valueList);
 	int GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueList);
 	float** GzAddGrass(int numParts, GzToken *nameList, GzPointer *valueList);
-	void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPointer *valueList, GzCoord* vertexGrassList, GzCoord* normalGrassList, GzTextureIndex* uvGrassList, float* MidPointFullDetail);
+	void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPointer *valueList, GzCoord** vertexGrassList, GzCoord** normalGrassList, GzTextureIndex** uvGrassList, float* MidPointFullDetail);
 
 	// HW3
 	int GzPutCamera(GzCamera camera);

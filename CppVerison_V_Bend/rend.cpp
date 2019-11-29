@@ -33,7 +33,6 @@ void getMidCentroid(GzCoord V1, GzCoord V2, GzCoord V3, float* mid);
 
 double *zTablePram;
 double **normalTablePram;
-float **result;
 float *midPoint;
 
 float rand_angle() {
@@ -185,7 +184,6 @@ int GzRender::GzScaleMat(GzCoord scale, GzMatrix mat)
 	return GZ_SUCCESS;
 }
 
-
 GzRender::GzRender(int xRes, int yRes)
 {
 	/* HW1.1 create a framebuffer for MS Windows display:
@@ -272,10 +270,6 @@ GzRender::GzRender(int xRes, int yRes)
 	for (int i = 0; i < 3; i++)
 		normalTablePram[i] = (double *)malloc(5 * sizeof(double));
 
-	result = (float **)malloc(3 * sizeof(float *));
-	for (int i = 0; i < 3; i++)
-		result[i] = (float *)malloc(8 * sizeof(float));
-
 	midPoint = (float *)malloc(3 * sizeof(float));
 }
 
@@ -286,7 +280,6 @@ GzRender::~GzRender()
 	delete[] pixelbuffer;
 	free(zTablePram);
 	free(normalTablePram);
-	free(result);
 	free(midPoint);
 }
 
@@ -693,7 +686,6 @@ int GzRender::GzPutAttribute(int numAttributes, GzToken	*nameList, GzPointer *va
 		if (token == GZ_RGB_COLOR)
 		{
 			GzColor* c = (GzColor*)valueList[i];
-			//float *c = (float*)*(valueList+i);
 			flatcolor[0] = max(min(c[i][RED], 4095), 0);
 			flatcolor[1] = max(min(c[i][GREEN], 4095), 0);
 			flatcolor[2] = max(min(c[i][BLUE], 4095), 0);
@@ -764,19 +756,7 @@ int GzRender::GzPutAttribute(int numAttributes, GzToken	*nameList, GzPointer *va
 int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueList)
 /* numParts - how many names and values */
 {
-	/* HW 2.2
-	-- Pass in a triangle description with tokens and values corresponding to
-		  GZ_NULL_TOKEN:		do nothing - no values
-		  GZ_POSITION:		3 vert positions in model space
-	-- Invoke the rastrizer/scanline framework
-	-- Return error code
-	*/
-	/*
-	-- Xform positions of verts using matrix on top of stack
-	-- Clip - just discard any triangle with any vert(s) behind view plane
-			- optional: test for triangles with all three verts off-screen (trivial frustum cull)
-	-- invoke triangle rasterizer
-	*/
+
 	for (int i = 0; i < numParts; i++)
 	{
 		if (pixelbuffer == NULL || framebuffer == NULL) return GZ_FAILURE;
@@ -1652,7 +1632,7 @@ void rotation(GzCoord a, GzCoord b, GzCoord N, GzCoord*base1, GzCoord* base2) {
 
 }
 
-void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPointer *valueList, GzCoord* vertexGrassList, GzCoord* normalGrassList, GzTextureIndex* uvGrassList, float* MidPointFullDetail) {
+void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPointer *valueList, GzCoord** vertexGrassList, GzCoord** normalGrassList, GzTextureIndex** uvGrassList, float* MidPointFullDetail) {
 
 
 	typedef GzCoord   Coord3[3];
@@ -1716,6 +1696,7 @@ void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPoint
 	midNy /= var;
 	midNz /= var;
 
+	//cast info of midpoint of current triangle
 	MidPointFullDetail[0] = midX;
 	MidPointFullDetail[1] = midY;
 	MidPointFullDetail[2] = midZ;
@@ -1759,59 +1740,217 @@ void GzRender::GzAddGrassWithModelSpace(int numParts, GzToken *nameList, GzPoint
 	GzTextureIndex uvBase1 = { -0.5, 0 };
 	GzTextureIndex uvBase2 = { 0, 1 };
 
-	result[0][0] = top[0];
-	result[0][1] = top[1];
-	result[0][2] = top[2];
-	result[0][3] = midNx;
-	result[0][4] = midNy;
-	result[0][5] = midNz;
-	result[0][6] = uvTop[0];
-	result[0][7] = uvTop[1];
+	// get the 1/3 of the triangle
+	GzCoord L32, L31, R32, R31;
+	dX = top[0] - base1[0];
+	dY = top[1] - base1[1];
+	dZ = top[2] - base1[2];
+	float c = rand_curve();
+	float curve[5] = { 0,c / 200,c / 20,c / 10,c };
+	float sign = rand_sign();
 
-	result[1][0] = base1[0];
-	result[1][1] = base1[1];
-	result[1][2] = base1[2];
-	result[1][3] = midNx;
-	result[1][4] = midNy;
-	result[1][5] = midNz;
-	result[1][6] = uvBase1[0];
-	result[1][7] = uvBase1[1];
+	L32[0] = dX * 1 / 3 + base1[0] + midNx * curve[0] * sign;
+	L32[1] = dY * 1 / 3 + base1[1] + midNy * curve[0] * sign;
+	L32[2] = dZ * 1 / 3 + base1[2] + midNz * curve[0] * sign;
+	L31[0] = dX * 2 / 3 + base1[0] + midNx * curve[2] * sign;
+	L31[1] = dY * 2 / 3 + base1[1] + midNy * curve[2] * sign;
+	L31[2] = dZ * 2 / 3 + base1[2] + midNz * curve[2] * sign;
+	dX = top[0] - base2[0];
+	dY = top[1] - base2[1];
+	dZ = top[2] - base2[2];
+	R32[0] = dX * 1 / 3 + base2[0] + midNx * curve[1] * sign;
+	R32[1] = dY * 1 / 3 + base2[1] + midNy * curve[1] * sign;
+	R32[2] = dZ * 1 / 3 + base2[2] + midNz * curve[1] * sign;
+	R31[0] = dX * 2 / 3 + base2[0] + midNx * curve[3] * sign;
+	R31[1] = dY * 2 / 3 + base2[1] + midNy * curve[3] * sign;
+	R31[2] = dZ * 2 / 3 + base2[2] + midNz * curve[3] * sign;
+	top[0] += midNx * curve[4];
+	top[1] += midNy * curve[4];
+	top[2] += midNz * curve[4];
 
-	result[2][0] = base2[0];
-	result[2][1] = base2[1];
-	result[2][2] = base2[2];
-	result[2][3] = midNx;
-	result[2][4] = midNy;
-	result[2][5] = midNz;
-	result[2][6] = uvBase2[0];
-	result[2][7] = uvBase2[1];
 
-	vertexGrassList[0][0] = result[0][0];
-	vertexGrassList[0][1] = result[0][1];
-	vertexGrassList[0][2] = result[0][2];
-	vertexGrassList[1][0] = result[1][0];
-	vertexGrassList[1][1] = result[1][1];
-	vertexGrassList[1][2] = result[1][2];
-	vertexGrassList[2][0] = result[2][0];
-	vertexGrassList[2][1] = result[2][1];
-	vertexGrassList[2][2] = result[2][2];
+	// tri 1
+	vertexGrassList[0][0][0] = L32[0];
+	vertexGrassList[0][0][1] = L32[1];
+	vertexGrassList[0][0][2] = L32[2];
+	vertexGrassList[0][1][0] = base1[0];
+	vertexGrassList[0][1][1] = base1[1];
+	vertexGrassList[0][1][2] = base1[2];
+	vertexGrassList[0][2][0] = base2[0];
+	vertexGrassList[0][2][1] = base2[1];
+	vertexGrassList[0][2][2] = base2[2];
 
-	normalGrassList[0][0] = result[0][3];
-	normalGrassList[0][1] = result[0][4];
-	normalGrassList[0][2] = result[0][5];
-	normalGrassList[1][0] = result[1][3];
-	normalGrassList[1][1] = result[1][4];
-	normalGrassList[1][2] = result[1][5];
-	normalGrassList[2][0] = result[2][3];
-	normalGrassList[2][1] = result[2][4];
-	normalGrassList[2][2] = result[2][5];
+	normalGrassList[0][0][0] = midNx;
+	normalGrassList[0][0][1] = midNy;
+	normalGrassList[0][0][2] = midNz;
+	normalGrassList[0][1][0] = midNx;
+	normalGrassList[0][1][1] = midNy;
+	normalGrassList[0][1][2] = midNz;
+	normalGrassList[0][2][0] = midNx;
+	normalGrassList[0][2][1] = midNy;
+	normalGrassList[0][2][2] = midNz;
 
-	uvGrassList[0][0] = result[0][6];
-	uvGrassList[0][1] = result[0][7];
-	uvGrassList[1][0] = result[1][6];
-	uvGrassList[1][1] = result[1][7];
-	uvGrassList[2][0] = result[2][6];
-	uvGrassList[2][1] = result[2][7];
+	uvGrassList[0][0][0] = uvTop[0];
+	uvGrassList[0][0][1] = uvTop[1];
+	uvGrassList[0][1][0] = uvBase1[0];
+	uvGrassList[0][1][1] = uvBase1[1];
+	uvGrassList[0][2][0] = uvBase2[0];
+	uvGrassList[0][2][1] = uvBase2[1];
+
+
+	//tri 2
+	calPlaneParams(L32, base2, R32, &A, &B, &C, &D, &flag);
+
+	midNx = A;
+	midNy = B;
+	midNz = C;
+	var = pow(pow(midNx, 2) + pow(midNy, 2) + pow(midNz, 2), 0.5);
+	midNx /= var;
+	midNy /= var;
+	midNz /= var;
+
+	vertexGrassList[1][0][0] = L32[0];
+	vertexGrassList[1][0][1] = L32[1];
+	vertexGrassList[1][0][2] = L32[2];
+	vertexGrassList[1][1][0] = R32[0];
+	vertexGrassList[1][1][1] = R32[1];
+	vertexGrassList[1][1][2] = R32[2];
+	vertexGrassList[1][2][0] = base2[0];
+	vertexGrassList[1][2][1] = base2[1];
+	vertexGrassList[1][2][2] = base2[2];
+
+	normalGrassList[1][0][0] = midNx;
+	normalGrassList[1][0][1] = midNy;
+	normalGrassList[1][0][2] = midNz;
+	normalGrassList[1][1][0] = midNx;
+	normalGrassList[1][1][1] = midNy;
+	normalGrassList[1][1][2] = midNz;
+	normalGrassList[1][2][0] = midNx;
+	normalGrassList[1][2][1] = midNy;
+	normalGrassList[1][2][2] = midNz;
+
+	uvGrassList[1][0][0] = uvTop[0];
+	uvGrassList[1][0][1] = uvTop[1];
+	uvGrassList[1][1][0] = uvBase1[0];
+	uvGrassList[1][1][1] = uvBase1[1];
+	uvGrassList[1][2][0] = uvBase2[0];
+	uvGrassList[1][2][1] = uvBase2[1];
+
+
+	//tri 3
+	calPlaneParams(L32, L31, R32, &A, &B, &C, &D, &flag);
+
+	midNx = A;
+	midNy = B;
+	midNz = C;
+	var = pow(pow(midNx, 2) + pow(midNy, 2) + pow(midNz, 2), 0.5);
+	midNx /= var;
+	midNy /= var;
+	midNz /= var;
+
+	vertexGrassList[2][0][0] = L32[0];
+	vertexGrassList[2][0][1] = L32[1];
+	vertexGrassList[2][0][2] = L32[2];
+	vertexGrassList[2][1][0] = R32[0];
+	vertexGrassList[2][1][1] = R32[1];
+	vertexGrassList[2][1][2] = R32[2];
+	vertexGrassList[2][2][0] = L31[0];
+	vertexGrassList[2][2][1] = L31[1];
+	vertexGrassList[2][2][2] = L31[2];
+
+	normalGrassList[2][0][0] = midNx;
+	normalGrassList[2][0][1] = midNy;
+	normalGrassList[2][0][2] = midNz;
+	normalGrassList[2][1][0] = midNx;
+	normalGrassList[2][1][1] = midNy;
+	normalGrassList[2][1][2] = midNz;
+	normalGrassList[2][2][0] = midNx;
+	normalGrassList[2][2][1] = midNy;
+	normalGrassList[2][2][2] = midNz;
+
+	uvGrassList[2][0][0] = uvTop[0];
+	uvGrassList[2][0][1] = uvTop[1];
+	uvGrassList[2][1][0] = uvBase1[0];
+	uvGrassList[2][1][1] = uvBase1[1];
+	uvGrassList[2][2][0] = uvBase2[0];
+	uvGrassList[2][2][1] = uvBase2[1];
+
+	//tri 4
+	calPlaneParams(R31, L31, R32, &A, &B, &C, &D, &flag);
+
+	midNx = A;
+	midNy = B;
+	midNz = C;
+	var = pow(pow(midNx, 2) + pow(midNy, 2) + pow(midNz, 2), 0.5);
+	midNx /= var;
+	midNy /= var;
+	midNz /= var;
+
+	vertexGrassList[3][0][0] = R31[0];
+	vertexGrassList[3][0][1] = R31[1];
+	vertexGrassList[3][0][2] = R31[2];
+	vertexGrassList[3][1][0] = R32[0];
+	vertexGrassList[3][1][1] = R32[1];
+	vertexGrassList[3][1][2] = R32[2];
+	vertexGrassList[3][2][0] = L31[0];
+	vertexGrassList[3][2][1] = L31[1];
+	vertexGrassList[3][2][2] = L31[2];
+
+	normalGrassList[3][0][0] = midNx;
+	normalGrassList[3][0][1] = midNy;
+	normalGrassList[3][0][2] = midNz;
+	normalGrassList[3][1][0] = midNx;
+	normalGrassList[3][1][1] = midNy;
+	normalGrassList[3][1][2] = midNz;
+	normalGrassList[3][2][0] = midNx;
+	normalGrassList[3][2][1] = midNy;
+	normalGrassList[3][2][2] = midNz;
+
+	uvGrassList[3][0][0] = uvTop[0];
+	uvGrassList[3][0][1] = uvTop[1];
+	uvGrassList[3][1][0] = uvBase1[0];
+	uvGrassList[3][1][1] = uvBase1[1];
+	uvGrassList[3][2][0] = uvBase2[0];
+	uvGrassList[3][2][1] = uvBase2[1];
+
+	//tri 5
+	calPlaneParams(R31, L31, top, &A, &B, &C, &D, &flag);
+
+	midNx = A;
+	midNy = B;
+	midNz = C;
+	var = pow(pow(midNx, 2) + pow(midNy, 2) + pow(midNz, 2), 0.5);
+	midNx /= var;
+	midNy /= var;
+	midNz /= var;
+
+	vertexGrassList[4][0][0] = R31[0];
+	vertexGrassList[4][0][1] = R31[1];
+	vertexGrassList[4][0][2] = R31[2];
+	vertexGrassList[4][1][0] = top[0];
+	vertexGrassList[4][1][1] = top[1];
+	vertexGrassList[4][1][2] = top[2];
+	vertexGrassList[4][2][0] = L31[0];
+	vertexGrassList[4][2][1] = L31[1];
+	vertexGrassList[4][2][2] = L31[2];
+
+	normalGrassList[4][0][0] = midNx;
+	normalGrassList[4][0][1] = midNy;
+	normalGrassList[4][0][2] = midNz;
+	normalGrassList[4][1][0] = midNx;
+	normalGrassList[4][1][1] = midNy;
+	normalGrassList[4][1][2] = midNz;
+	normalGrassList[4][2][0] = midNx;
+	normalGrassList[4][2][1] = midNy;
+	normalGrassList[4][2][2] = midNz;
+
+	uvGrassList[4][0][0] = uvTop[0];
+	uvGrassList[4][0][1] = uvTop[1];
+	uvGrassList[4][1][0] = uvBase1[0];
+	uvGrassList[4][1][1] = uvBase1[1];
+	uvGrassList[4][2][0] = uvBase2[0];
+	uvGrassList[4][2][1] = uvBase2[1];
+
 }
 
 void setNormal(GzCoord V1, GzCoord V2, GzCoord V3, GzCoord N1, GzCoord N2, GzCoord N3, double** normalTablePram) {
