@@ -831,8 +831,8 @@ int GzRender::GzFlushDisplay2DepthFile(FILE* outfile)
 	if (z_map == NULL) return GZ_FAILURE;
 	float min_z = MAXINT;
 	float span_z = MAXINT;
-	GzDepth p;
-	for (int i = 0; i <= (xres * yres); i++) {
+	float p;
+	for (int i = 0; i < (xres * yres); i++) {
 		p = z_map[i];
 		if (p < min_z)
 			min_z = (float)p;
@@ -1885,391 +1885,391 @@ void convertCoordinates(GzCoord* x, GzMatrix matrix) {
 int GzRender::GzCalShadowDepth(int numParts, GzToken *nameList, GzPointer *valueList)
 /* numParts - how many names and values */
 {
-	//for (int i = 0; i < numParts; i++)
-	//{
-	//	if (pixelbuffer == NULL || framebuffer == NULL) return GZ_FAILURE;
+	for (int i = 0; i < numParts; i++)
+	{
+		if (pixelbuffer == NULL || framebuffer == NULL) return GZ_FAILURE;
 
-	//	GzCoord* vP = (GzCoord*)valueList[0];
-	//	float v4d[3][4];
+		GzCoord* vP = (GzCoord*)valueList[0];
+		float v4d[3][4];
 
-	//	//GzCoord v4d[4];
-	//	v4d[0][0] = vP[0][X];
-	//	v4d[0][1] = vP[0][Y];
-	//	v4d[0][2] = vP[0][Z];
-	//	v4d[1][0] = vP[1][X];
-	//	v4d[1][1] = vP[1][Y];
-	//	v4d[1][2] = vP[1][Z];
-	//	v4d[2][0] = vP[2][X];
-	//	v4d[2][1] = vP[2][Y];
-	//	v4d[2][2] = vP[2][Z];
-	//	v4d[0][3] = 1.0;
-	//	v4d[1][3] = 1.0;
-	//	v4d[2][3] = 1.0;
+		//GzCoord v4d[4];
+		v4d[0][0] = vP[0][X];
+		v4d[0][1] = vP[0][Y];
+		v4d[0][2] = vP[0][Z];
+		v4d[1][0] = vP[1][X];
+		v4d[1][1] = vP[1][Y];
+		v4d[1][2] = vP[1][Z];
+		v4d[2][0] = vP[2][X];
+		v4d[2][1] = vP[2][Y];
+		v4d[2][2] = vP[2][Z];
+		v4d[0][3] = 1.0;
+		v4d[1][3] = 1.0;
+		v4d[2][3] = 1.0;
 
-	//	float t4d[3][4];
-	//	float s = 0;
+		float t4d[3][4];
+		float s = 0;
 
-	//	//matrix multiply
-	//	for (int i = 0; i < 4; i++)
-	//	{
-	//		for (int j = 0; j < 3; j++)
-	//		{
-	//			for (int k = 0; k < 4; k++)
-	//				s = s + XLight[lightmatlevel][i][k] * v4d[j][k];
+		//matrix multiply
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				for (int k = 0; k < 4; k++)
+					s = s + XLight[lightmatlevel][i][k] * v4d[j][k];
 
-	//			t4d[j][i] = s;
-	//			s = 0;
+				t4d[j][i] = s;
+				s = 0;
+			}
+		}
+
+		if (t4d[0][2] < m_light.position[2] || t4d[1][2] < m_light.position[2] || t4d[2][2] < m_light.position[2]) return GZ_FAILURE;
+
+		GzCoord v1 = { t4d[0][0] / t4d[0][3], t4d[0][1] / t4d[0][3], t4d[0][2] / t4d[0][3] }; //x, y, z
+		GzCoord v2 = { t4d[1][0] / t4d[1][3], t4d[1][1] / t4d[1][3], t4d[1][2] / t4d[1][3] };
+		GzCoord v3 = { t4d[2][0] / t4d[2][3], t4d[2][1] / t4d[2][3], t4d[2][2] / t4d[2][3] };
+
+		sort_base_y(v1, v2, v3);
+
+		int flag = -1;
+
+		if (v1[Y] == v2[Y]) //flag invert tri
+		{
+			if (v2[X] > v1[X]) {
+				for (int i = 0; i < 3; i++) {
+					swap(v1[i], v2[i]);
+
+				}
+			}
+
+			flag = 0; //invert tri
+		}
+		else if (v2[Y] == v3[Y]) //flag invert tri
+		{
+			if (v2[X] > v3[X]) {
+				//v1 always on the upper left
+				for (int i = 0; i < 3; i++) {
+					swap(v3[i], v2[i]);
+				}
+			}
+
+			flag = 1; //tri 
+		}
+		else {
+
+			flag = 2;
+		}
+
+		if (flag == 2) {
+			float s12x = (v2[X] - v1[X]) / (v2[Y] - v1[Y]);
+			float s12z = (v2[Z] - v1[Z]) / (v2[Y] - v1[Y]);
+			float s13x = (v3[X] - v1[X]) / (v3[Y] - v1[Y]);
+			float s13z = (v3[Z] - v1[Z]) / (v3[Y] - v1[Y]);
+			float s23x = (v3[X] - v2[X]) / (v3[Y] - v2[Y]);
+			float s23z = (v3[Z] - v2[Z]) / (v3[Y] - v2[Y]);
+			float deltaY = 0;
+
+
+			for (int j = ceil(v1[Y]); j <= v3[Y]; j++) { //y
+
+				deltaY = j - v1[Y];
+
+				if (deltaY <= v2[Y] - v1[Y]) {
+					float x1 = v1[X] + s12x * deltaY;
+					float x2 = v1[X] + s13x * deltaY;
+					float zValue1 = v1[Z] + s12z * deltaY;
+					float zValue2 = v1[Z] + s13z * deltaY;
+
+					if (x1 > x2) {
+						swap(x1, x2);
+						swap(zValue1, zValue2);
+					}
+
+					//cal z slope in one y
+					float slopeZX = (zValue2 - zValue1) / (x2 - x1);
+
+					for (int i = ceil(x1); i <= x2; i++) { //x		
+
+						GzIntensity r = 0, g = 0, b = 0, a = 0;
+						float z = MAXINT;
+
+						if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
+							GzGetZ(i, j, &z);
+							float newZ = zValue1 + slopeZX * (i - x1);
+							if (newZ < z && newZ >= 0) {
+								GzPutZ(i, j, newZ);
+							}
+
+						}
+					}
+				}
+				else {
+					float x1 = v2[X] + s23x * (deltaY - (v2[Y] - v1[Y]));
+					float x2 = v1[X] + s13x * deltaY;
+					float zValue1 = v2[Z] + s23z * (deltaY - (v2[Y] - v1[Y]));
+					float zValue2 = v1[Z] + s13z * deltaY;
+
+					if (x1 > x2) {
+						swap(x1, x2);
+						swap(zValue1, zValue2);
+					}
+
+					//cal z slope in one y
+					float slopeZX = (zValue2 - zValue1) / (x2 - x1);
+
+					for (int i = ceil(x1); i <= x2; i++) { //x		
+
+						GzIntensity r = 0, g = 0, b = 0, a = 0;
+						float z = MAXINT;
+
+						if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
+							GzGetZ(i, j, &z);
+							float newZ = zValue1 + slopeZX * (i - x1);
+							if (newZ < z && newZ >= 0) {
+								GzPutZ(i, j, newZ);
+							}
+
+						}
+					}
+				}
+				//
+			}
+		}
+
+		if (flag == 1) {	//line V1; line v2, v3
+			float s12x = (v2[X] - v1[X]) / (v2[Y] - v1[Y]);
+			float s12z = (v2[Z] - v1[Z]) / (v2[Y] - v1[Y]);
+			float s13x = (v3[X] - v1[X]) / (v3[Y] - v1[Y]);
+			float s13z = (v3[Z] - v1[Z]) / (v3[Y] - v1[Y]);
+			float deltaY = 0;
+
+			for (int j = ceil(v1[Y]); j <= v3[Y]; j++) { //y
+
+				deltaY = j - v1[Y];
+
+				float x1 = v1[X] + s12x * deltaY;
+				float x2 = v1[X] + s13x * deltaY;
+				float zValue1 = v1[Z] + s12z * deltaY;
+				float zValue2 = v1[Z] + s13z * deltaY;
+
+				if (x1 > x2) {
+					swap(x1, x2);
+					swap(zValue1, zValue2);
+				}
+
+				//cal z slope in one y
+				float slopeZX = (zValue2 - zValue1) / (x2 - x1);
+
+				for (int i = ceil(x1); i <= x2; i++) { //x		
+
+					GzIntensity r = 0, g = 0, b = 0, a = 0;
+					float z = MAXINT;
+
+					if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
+						GzGetZ(i, j, &z);
+						float newZ = zValue1 + slopeZX * (i - x1);
+						if (newZ < z && newZ >= 0) {
+							GzPutZ(i, j, newZ);
+						}
+
+					}
+				}
+			}
+		}
+
+		if (flag == 0) { //line: V2, V1; line V3
+			float s13x = (v3[X] - v1[X]) / (v3[Y] - v1[Y]);
+			float s13z = (v3[Z] - v1[Z]) / (v3[Y] - v1[Y]);
+			float s23x = (v3[X] - v2[X]) / (v3[Y] - v2[Y]);
+			float s23z = (v3[Z] - v2[Z]) / (v3[Y] - v2[Y]);
+			float deltaY = 0;
+
+			for (int j = ceil(v1[Y]); j <= v3[Y]; j++) { //y
+
+				deltaY = j - v1[Y];
+
+				float x1 = v2[X] + s23x * deltaY;
+				float x2 = v1[X] + s13x * deltaY;
+				float zValue1 = v2[Z] + s23z * deltaY;
+				float zValue2 = v1[Z] + s13z * deltaY;
+
+				if (x1 > x2) {
+					swap(x1, x2);
+					swap(zValue1, zValue2);
+				}
+
+				//cal z slope in one y
+				float slopeZX = (zValue2 - zValue1) / (x2 - x1);
+
+				for (int i = ceil(x1); i <= x2; i++) { //x		
+
+					GzIntensity r = 0, g = 0, b = 0, a = 0;
+					float z = MAXINT;
+
+					if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
+						GzGetZ(i, j, &z);
+						float newZ = zValue1 + slopeZX * (i - x1);
+						if (newZ < z && newZ >= 0) {
+							GzPutZ(i, j, newZ);
+						}
+
+					}
+				}
+			}
+
+		}
+	}
+
+	//typedef struct {
+	//	float dx_dy;
+	//	float dz_dy;
+	//	bool fxy;
+	//	bool fzy;
+	//} EdgeSlope;
+	//typedef GzCoord   Coord3[3];
+	//typedef GzTextureIndex   Texture3[3];
+	//bool fzx = false;
+	//int sorted_y[3] = { 0,1,2 };
+	//float deltaX, deltaY, slope_dz_dx;
+	//float start_x, start_z, end_z, end_x, y, x;
+	//EdgeSlope slope12, slope13, slope23;//12,13,23, dx/dy,dz/dy
+	//int temp;
+	//int first_vertix;
+	//double var, z_var, z_var1, z_var2, z_var3;
+	//GzCoord *v1, *v2, *v3;
+
+	//GzDepth z_pre, z;
+	//float z_n;
+	//double Az, Bz, Cz, Dz,flag;
+
+	//GzCoord p1, p2, p3, N;
+	//Coord3* loc;
+
+
+
+	//loc = (Coord3*)*valueList;
+
+	//for (int i = 0; i < 3; i++) {
+	//	convertCoordinates((GzCoord*)(*loc)[i], Ximage[matlevel - 1]);
+	//}
+
+
+	//// last questiona:check vertice
+
+
+	//// step 1 check the edge relationship find top y
+	//for (int i = 0; i < 3 - 1; i++) {
+	//	for (int j = 0; j < 3 - 1 - i; j++) {
+	//		if ((*loc)[sorted_y[j]][Y] > (*loc)[sorted_y[j + 1]][Y]) {
+	//			temp = sorted_y[j];
+	//			sorted_y[j] = sorted_y[j + 1];
+	//			sorted_y[j + 1] = temp;
 	//		}
-	//	}
-
-	//	if (t4d[0][2] < m_light.position[2] || t4d[1][2] < m_light.position[2] || t4d[2][2] < m_light.position[2]) return GZ_FAILURE;
-
-	//	GzCoord v1 = { t4d[0][0] / t4d[0][3], t4d[0][1] / t4d[0][3], t4d[0][2] / t4d[0][3] }; //x, y, z
-	//	GzCoord v2 = { t4d[1][0] / t4d[1][3], t4d[1][1] / t4d[1][3], t4d[1][2] / t4d[1][3] };
-	//	GzCoord v3 = { t4d[2][0] / t4d[2][3], t4d[2][1] / t4d[2][3], t4d[2][2] / t4d[2][3] };
-
-	//	sort_base_y(v1, v2, v3);
-
-	//	int flag = -1;
-
-	//	if (v1[Y] == v2[Y]) //flag invert tri
-	//	{
-	//		if (v2[X] > v1[X]) {
-	//			for (int i = 0; i < 3; i++) {
-	//				swap(v1[i], v2[i]);
-
-	//			}
-	//		}
-
-	//		flag = 0; //invert tri
-	//	}
-	//	else if (v2[Y] == v3[Y]) //flag invert tri
-	//	{
-	//		if (v2[X] > v3[X]) {
-	//			//v1 always on the upper left
-	//			for (int i = 0; i < 3; i++) {
-	//				swap(v3[i], v2[i]);
-	//			}
-	//		}
-
-	//		flag = 1; //tri 
-	//	}
-	//	else {
-
-	//		flag = 2;
-	//	}
-
-	//	if (flag == 2) {
-	//		float s12x = (v2[X] - v1[X]) / (v2[Y] - v1[Y]);
-	//		float s12z = (v2[Z] - v1[Z]) / (v2[Y] - v1[Y]);
-	//		float s13x = (v3[X] - v1[X]) / (v3[Y] - v1[Y]);
-	//		float s13z = (v3[Z] - v1[Z]) / (v3[Y] - v1[Y]);
-	//		float s23x = (v3[X] - v2[X]) / (v3[Y] - v2[Y]);
-	//		float s23z = (v3[Z] - v2[Z]) / (v3[Y] - v2[Y]);
-	//		float deltaY = 0;
-
-
-	//		for (int j = ceil(v1[Y]); j <= v3[Y]; j++) { //y
-
-	//			deltaY = j - v1[Y];
-
-	//			if (deltaY <= v2[Y] - v1[Y]) {
-	//				float x1 = v1[X] + s12x * deltaY;
-	//				float x2 = v1[X] + s13x * deltaY;
-	//				float zValue1 = v1[Z] + s12z * deltaY;
-	//				float zValue2 = v1[Z] + s13z * deltaY;
-
-	//				if (x1 > x2) {
-	//					swap(x1, x2);
-	//					swap(zValue1, zValue2);
-	//				}
-
-	//				//cal z slope in one y
-	//				float slopeZX = (zValue2 - zValue1) / (x2 - x1);
-
-	//				for (int i = ceil(x1); i <= x2; i++) { //x		
-
-	//					GzIntensity r = 0, g = 0, b = 0, a = 0;
-	//					GzDepth z = MAXINT;
-
-	//					if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
-	//						GzGetZ(i, j, &z);
-	//						float newZ = zValue1 + slopeZX * (i - x1);
-	//						if (newZ < z && newZ >= 0) {
-	//							GzPutZ(i, j, newZ);
-	//						}
-
-	//					}
-	//				}
-	//			}
-	//			else {
-	//				float x1 = v2[X] + s23x * (deltaY - (v2[Y] - v1[Y]));
-	//				float x2 = v1[X] + s13x * deltaY;
-	//				float zValue1 = v2[Z] + s23z * (deltaY - (v2[Y] - v1[Y]));
-	//				float zValue2 = v1[Z] + s13z * deltaY;
-
-	//				if (x1 > x2) {
-	//					swap(x1, x2);
-	//					swap(zValue1, zValue2);
-	//				}
-
-	//				//cal z slope in one y
-	//				float slopeZX = (zValue2 - zValue1) / (x2 - x1);
-
-	//				for (int i = ceil(x1); i <= x2; i++) { //x		
-
-	//					GzIntensity r = 0, g = 0, b = 0, a = 0;
-	//					GzDepth z = MAXINT;
-
-	//					if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
-	//						GzGetZ(i, j, &z);
-	//						float newZ = zValue1 + slopeZX * (i - x1);
-	//						if (newZ < z && newZ >= 0) {
-	//							GzPutZ(i, j, newZ);
-	//						}
-
-	//					}
-	//				}
-	//			}
-	//			//
-	//		}
-	//	}
-
-	//	if (flag == 1) {	//line V1; line v2, v3
-	//		float s12x = (v2[X] - v1[X]) / (v2[Y] - v1[Y]);
-	//		float s12z = (v2[Z] - v1[Z]) / (v2[Y] - v1[Y]);
-	//		float s13x = (v3[X] - v1[X]) / (v3[Y] - v1[Y]);
-	//		float s13z = (v3[Z] - v1[Z]) / (v3[Y] - v1[Y]);
-	//		float deltaY = 0;
-
-	//		for (int j = ceil(v1[Y]); j <= v3[Y]; j++) { //y
-
-	//			deltaY = j - v1[Y];
-
-	//			float x1 = v1[X] + s12x * deltaY;
-	//			float x2 = v1[X] + s13x * deltaY;
-	//			float zValue1 = v1[Z] + s12z * deltaY;
-	//			float zValue2 = v1[Z] + s13z * deltaY;
-
-	//			if (x1 > x2) {
-	//				swap(x1, x2);
-	//				swap(zValue1, zValue2);
-	//			}
-
-	//			//cal z slope in one y
-	//			float slopeZX = (zValue2 - zValue1) / (x2 - x1);
-
-	//			for (int i = ceil(x1); i <= x2; i++) { //x		
-
-	//				GzIntensity r = 0, g = 0, b = 0, a = 0;
-	//				GzDepth z = MAXINT;
-
-	//				if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
-	//					GzGetZ(i, j, &z);
-	//					float newZ = zValue1 + slopeZX * (i - x1);
-	//					if (newZ < z && newZ >= 0) {
-	//						GzPutZ(i, j, newZ);
-	//					}
-
-	//				}
-	//			}
-	//		}
-	//	}
-
-	//	if (flag == 0) { //line: V2, V1; line V3
-	//		float s13x = (v3[X] - v1[X]) / (v3[Y] - v1[Y]);
-	//		float s13z = (v3[Z] - v1[Z]) / (v3[Y] - v1[Y]);
-	//		float s23x = (v3[X] - v2[X]) / (v3[Y] - v2[Y]);
-	//		float s23z = (v3[Z] - v2[Z]) / (v3[Y] - v2[Y]);
-	//		float deltaY = 0;
-
-	//		for (int j = ceil(v1[Y]); j <= v3[Y]; j++) { //y
-
-	//			deltaY = j - v1[Y];
-
-	//			float x1 = v2[X] + s23x * deltaY;
-	//			float x2 = v1[X] + s13x * deltaY;
-	//			float zValue1 = v2[Z] + s23z * deltaY;
-	//			float zValue2 = v1[Z] + s13z * deltaY;
-
-	//			if (x1 > x2) {
-	//				swap(x1, x2);
-	//				swap(zValue1, zValue2);
-	//			}
-
-	//			//cal z slope in one y
-	//			float slopeZX = (zValue2 - zValue1) / (x2 - x1);
-
-	//			for (int i = ceil(x1); i <= x2; i++) { //x		
-
-	//				GzIntensity r = 0, g = 0, b = 0, a = 0;
-	//				GzDepth z = MAXINT;
-
-	//				if (!(i >= xres || i < 0 || j >= yres || j < 0)) {
-	//					GzGetZ(i, j, &z);
-	//					float newZ = zValue1 + slopeZX * (i - x1);
-	//					if (newZ < z && newZ >= 0) {
-	//						GzPutZ(i, j, newZ);
-	//					}
-
-	//				}
-	//			}
-	//		}
-
 	//	}
 	//}
 
-	typedef struct {
-		float dx_dy;
-		float dz_dy;
-		bool fxy;
-		bool fzy;
-	} EdgeSlope;
-	typedef GzCoord   Coord3[3];
-	typedef GzTextureIndex   Texture3[3];
-	bool fzx = false;
-	int sorted_y[3] = { 0,1,2 };
-	float deltaX, deltaY, slope_dz_dx;
-	float start_x, start_z, end_z, end_x, y, x;
-	EdgeSlope slope12, slope13, slope23;//12,13,23, dx/dy,dz/dy
-	int temp;
-	int first_vertix;
-	double var, z_var, z_var1, z_var2, z_var3;
-	GzCoord *v1, *v2, *v3;
+	//for (int i = 0; i < 3; i++) {
+	//	if (sorted_y[i] == 0) {
+	//		first_vertix = i;
+	//		break;
+	//	}
+	//}
 
-	GzDepth z_pre, z;
-	float z_n;
-	double Az, Bz, Cz, Dz,flag;
+	//v1 = (*loc + sorted_y[0]);
+	//v2 = (*loc + sorted_y[1]);
+	//v3 = (*loc + sorted_y[2]);
 
-	GzCoord p1, p2, p3, N;
-	Coord3* loc;
+	//// skip if any z value >0 => calculate
+	//if ((*v1)[Z] >= 0 || (*v2)[Z] >= 0 || (*v3)[Z] >= 0) {
+
+	//	loc = (Coord3*)valueList[1];// the loc of norm
 
 
+	//	// calculate the light 
+	//	for (int i = 0; i < 3; i++) {
+	//		p1[i] = (*v1)[i];
+	//		p2[i] = (*v2)[i];
+	//		p3[i] = (*v3)[i];
+	//	}
+	//	calPlaneParams(p1, p2, p3, &Az, &Bz, &Cz, &Dz,&flag);
 
-	loc = (Coord3*)*valueList;
-
-	for (int i = 0; i < 3; i++) {
-		convertCoordinates((GzCoord*)(*loc)[i], Ximage[matlevel - 1]);
-	}
-
-
-	// last questiona:check vertice
-
-
-	// step 1 check the edge relationship find top y
-	for (int i = 0; i < 3 - 1; i++) {
-		for (int j = 0; j < 3 - 1 - i; j++) {
-			if ((*loc)[sorted_y[j]][Y] > (*loc)[sorted_y[j + 1]][Y]) {
-				temp = sorted_y[j];
-				sorted_y[j] = sorted_y[j + 1];
-				sorted_y[j + 1] = temp;
-			}
-		}
-	}
-
-	for (int i = 0; i < 3; i++) {
-		if (sorted_y[i] == 0) {
-			first_vertix = i;
-			break;
-		}
-	}
-
-	v1 = (*loc + sorted_y[0]);
-	v2 = (*loc + sorted_y[1]);
-	v3 = (*loc + sorted_y[2]);
-
-	// skip if any z value >0 => calculate
-	if ((*v1)[Z] >= 0 || (*v2)[Z] >= 0 || (*v3)[Z] >= 0) {
-
-		loc = (Coord3*)valueList[1];// the loc of norm
+	//	// skip if any z value >0 => calculate
+	//	  ////  // step 3 computing slope
+	//	slope12.dx_dy = CalSlope((*v1)[X], (*v2)[X], (*v1)[Y], (*v2)[Y], &slope12.fxy);
+	//	slope12.dz_dy = CalSlope((*v1)[Z], (*v2)[Z], (*v1)[Y], (*v2)[Y], &slope12.fzy);
+	//	slope13.dx_dy = CalSlope((*v1)[X], (*v3)[X], (*v1)[Y], (*v3)[Y], &slope13.fxy);
+	//	slope13.dz_dy = CalSlope((*v1)[Z], (*v3)[Z], (*v1)[Y], (*v3)[Y], &slope13.fzy);
+	//	slope23.dx_dy = CalSlope((*v3)[X], (*v2)[X], (*v3)[Y], (*v2)[Y], &slope23.fxy);
+	//	slope23.dz_dy = CalSlope((*v3)[Z], (*v2)[Z], (*v3)[Y], (*v2)[Y], &slope23.fzy);
 
 
-		// calculate the light 
-		for (int i = 0; i < 3; i++) {
-			p1[i] = (*v1)[i];
-			p2[i] = (*v2)[i];
-			p3[i] = (*v3)[i];
-		}
-		calPlaneParams(p1, p2, p3, &Az, &Bz, &Cz, &Dz,&flag);
+	//	// step 4 fill in value
+	//	// part 1
+	//	for (int y = ceil((*v1)[Y]); y < (*v2)[Y]; y++) {
 
-		// skip if any z value >0 => calculate
-		  ////  // step 3 computing slope
-		slope12.dx_dy = CalSlope((*v1)[X], (*v2)[X], (*v1)[Y], (*v2)[Y], &slope12.fxy);
-		slope12.dz_dy = CalSlope((*v1)[Z], (*v2)[Z], (*v1)[Y], (*v2)[Y], &slope12.fzy);
-		slope13.dx_dy = CalSlope((*v1)[X], (*v3)[X], (*v1)[Y], (*v3)[Y], &slope13.fxy);
-		slope13.dz_dy = CalSlope((*v1)[Z], (*v3)[Z], (*v1)[Y], (*v3)[Y], &slope13.fzy);
-		slope23.dx_dy = CalSlope((*v3)[X], (*v2)[X], (*v3)[Y], (*v2)[Y], &slope23.fxy);
-		slope23.dz_dy = CalSlope((*v3)[Z], (*v2)[Z], (*v3)[Y], (*v2)[Y], &slope23.fzy);
+	//		start_x = CalLoc((*v1)[X], slope12.dx_dy, (*v1)[Y], y, slope12.fxy);
+	//		start_z = CalLoc((*v1)[Z], slope12.dz_dy, (*v1)[Y], y, slope12.fzy);
 
+	//		end_x = CalLoc((*v1)[X], slope13.dx_dy, (*v1)[Y], y, slope13.fxy);
+	//		end_z = CalLoc((*v1)[Z], slope13.dz_dy, (*v1)[Y], y, slope13.fzy);
+	//		if (end_x < start_x) {
+	//			var = end_x;
+	//			end_x = start_x;
+	//			start_x = var;
 
-		// step 4 fill in value
-		// part 1
-		for (int y = ceil((*v1)[Y]); y < (*v2)[Y]; y++) {
+	//			var = end_z;
+	//			end_z = start_z;
+	//			start_z = var;
+	//		}
+	//		slope_dz_dx = CalSlope(end_z, start_z, end_x, start_x, &fzx);
 
-			start_x = CalLoc((*v1)[X], slope12.dx_dy, (*v1)[Y], y, slope12.fxy);
-			start_z = CalLoc((*v1)[Z], slope12.dz_dy, (*v1)[Y], y, slope12.fzy);
+	//		for (int x = ceil(start_x); x < end_x; x++) {
 
-			end_x = CalLoc((*v1)[X], slope13.dx_dy, (*v1)[Y], y, slope13.fxy);
-			end_z = CalLoc((*v1)[Z], slope13.dz_dy, (*v1)[Y], y, slope13.fzy);
-			if (end_x < start_x) {
-				var = end_x;
-				end_x = start_x;
-				start_x = var;
+	//			z = calZ(x, y, Az, Bz, Cz, Dz,flag);
+	//			 // check the state
+	//			GzGetZ(x, y, &z_n);
 
-				var = end_z;
-				end_z = start_z;
-				start_z = var;
-			}
-			slope_dz_dx = CalSlope(end_z, start_z, end_x, start_x, &fzx);
+	//			if (z_n > z && z >= 0) {
+	//				//  change u,v to the projective domain
+	//				GzPutZ(x, y, z);
+	//			}
+	//		}
+	//	}
 
-			for (int x = ceil(start_x); x < end_x; x++) {
+	//	// part2
+	//	for (int y = ceil((*v2)[Y]); y < (*v3)[Y]; y++) {
+	//		start_x = CalLoc((*v2)[X], slope23.dx_dy, (*v2)[Y], y, slope23.fxy);
+	//		start_z = CalLoc((*v2)[Z], slope23.dz_dy, (*v2)[Y], y, slope23.fzy);
+	//		// not right
+	//		end_x = CalLoc((*v1)[X], slope13.dx_dy, (*v1)[Y], y, slope13.fxy);
+	//		end_z = CalLoc((*v1)[Z], slope13.dz_dy, (*v1)[Y], y, slope13.fzy);
 
-				z = calZ(x, y, Az, Bz, Cz, Dz,flag);
-				 // check the state
-				GzGetZ(x, y, &z_n);
+	//		if (end_x < start_x) {
+	//			var = end_x;
+	//			end_x = start_x;
+	//			start_x = var;
 
-				if (z_n > z && z >= 0) {
-					//  change u,v to the projective domain
-					GzPutZ(x, y, z);
-				}
-			}
-		}
+	//			var = end_z;
+	//			end_z = start_z;
+	//			start_z = var;
+	//		}
 
-		// part2
-		for (int y = ceil((*v2)[Y]); y < (*v3)[Y]; y++) {
-			start_x = CalLoc((*v2)[X], slope23.dx_dy, (*v2)[Y], y, slope23.fxy);
-			start_z = CalLoc((*v2)[Z], slope23.dz_dy, (*v2)[Y], y, slope23.fzy);
-			// not right
-			end_x = CalLoc((*v1)[X], slope13.dx_dy, (*v1)[Y], y, slope13.fxy);
-			end_z = CalLoc((*v1)[Z], slope13.dz_dy, (*v1)[Y], y, slope13.fzy);
+	//		slope_dz_dx = CalSlope(end_z, start_z, end_x, start_x, &fzx);
 
-			if (end_x < start_x) {
-				var = end_x;
-				end_x = start_x;
-				start_x = var;
+	//		for (int x = ceil(start_x); x < end_x; x++) {
+	//			z = calZ(x, y, Az, Bz, Cz, Dz, flag);
+	//			// check the state
+	//			GzGetZ(x, y, &z_n);
 
-				var = end_z;
-				end_z = start_z;
-				start_z = var;
-			}
+	//			if (z_n > z && z >= 0) {
+	//				//  change u,v to the projective domain
+	//				GzPutZ(x, y, z);
 
-			slope_dz_dx = CalSlope(end_z, start_z, end_x, start_x, &fzx);
+	//			}
+	//		}
 
-			for (int x = ceil(start_x); x < end_x; x++) {
-				z = calZ(x, y, Az, Bz, Cz, Dz, flag);
-				// check the state
-				GzGetZ(x, y, &z_n);
+	//	}
 
-				if (z_n > z && z >= 0) {
-					//  change u,v to the projective domain
-					GzPutZ(x, y, z);
-
-				}
-			}
-
-		}
-
-	}
+	//}
 	return GZ_SUCCESS;
 }
 
