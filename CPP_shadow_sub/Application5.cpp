@@ -110,7 +110,7 @@ int Application5::Initialize()
 	//Light.FOV = 63.7;
 	//status |= m_pRender->GzPutLight(Light);
 
-#if 0 	/* set up app-defined camera if desired, else use camera defaults */
+#if 1 	/* set up app-defined camera if desired, else use camera defaults */
 	camera.position[X] = -3;
 	camera.position[Y] = -25;
 	camera.position[Z] = -4;

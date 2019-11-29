@@ -37,9 +37,9 @@ double **normalTablePram;
 float **result;
 
 void shadowColor(GzIntensity* r, GzIntensity* g, GzIntensity* b) {
-	*r = 3000;
-	*g = 3000;
-	*b = 3000;
+	*r = 100;
+	*g = 100;
+	*b = 100;
 }
 float rand_angle() {
 	return  static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / PI));
@@ -353,9 +353,9 @@ GzRender::GzRender(int xRes, int yRes)
 GzRender::~GzRender()
 {
 	/* HW1.2 clean up, free buffer memory */
-	delete[] framebuffer;
-	delete[] pixelbuffer;
-	delete[] z_map;
+	free(framebuffer);
+	free(pixelbuffer);
+	free(z_map);
 	free(zTablePram);
 	free(normalTablePram);
 	free(result);
@@ -473,6 +473,7 @@ int GzRender::GzBeginRender()
 	m_camera.Xwi[3][3] = 1.0;
 
 	GzPushMatrix(Xsp);
+	//Xsp[2][2] = (float)4095;
 	GzPushMatrix(m_camera.Xpi);
 	GzPushMatrix(m_camera.Xiw);
 
@@ -872,6 +873,9 @@ int GzRender::GzFlushDisplay2DepthFile(FILE* outfile)
 	if (z_map == NULL) return GZ_FAILURE;
 	float min_z = MAXINT;
 	float span_z = MAXINT;
+	/*float min_z = 4095;
+	float span_z = 4095;*/
+	
 	float p;
 	for (int i = 0; i < (xres * yres); i++) {
 		p = z_map[i];
@@ -1173,7 +1177,6 @@ float GzRender::GzCheckShadow(GzCoord input) {
 	float nbinarycheck = 0;
 	float checksum = 0;
 	float x = 0, y = 0, x_var = 0, y_var = 0;
-	float z, z_get;
 	for (int i = 0; i < 3; i++) {
 		input4[i] = input[i];
 	}
@@ -1201,42 +1204,55 @@ float GzRender::GzCheckShadow(GzCoord input) {
 		}
 	}
 	for (int i = 0; i < 3; i++) {
-		light4[i] = light4[i] / light4[3];
+		light4[i] /= light4[3];
 	}
+	float z = 0, z_get = 0;
 
 	x = light4[0];
 	y = light4[1];
 	z = light4[2];
+	//z = light4[2];
 
 	msg.Format(_T("x: %f, y: %f, light4, %f, %f, %f, %f\n"), x, y, light4[0], light4[1], light4[2], light4[3]);
 	//AfxMessageBox(msg);
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			x_var = x - (i - 1);
-			y_var = y - (j - 1);
-			if (x_var >= 0 && y_var < 0 && x_var < xres && y_var < yres) {
-				nbinarycheck++;
-				//could add a small offset -> anti-aliansing
-				GzGetZ(x_var, y_var, &z_get);
-
-				//msg.Format(_T("GzGetZ, z: %f, z_get: %f\n"), z, z_get);
-				//AfxMessageBox(msg);
-
-				if (z > z_get) {
-					checksum++;
-					//msg.Format(_T("checksum: %f\n"), checksum);
-					//AfxMessageBox(msg);
-				}
-			}
-
-		}
+	GzGetZ(round(x), round(y), &z_get);
+	if (z < z_get) {
+		//checksum++;
+		//msg.Format(_T("checksum: %f\n"), checksum);
+		//AfxMessageBox(msg);
+		return 1;
 	}
+	else {
+		return 0;
+	}
+
+	//for (int i = 0; i < 3; i++) {
+	//	for (int j = 0; j < 3; j++) {
+	//		x_var = x - (i - 1);
+	//		y_var = y - (j - 1);
+	//		if (x_var >= 0 && y_var < 0 && x_var < xres && y_var < yres) {
+	//			nbinarycheck++;
+	//			//could add a small offset -> anti-aliansing
+	//			GzGetZ(x_var, y_var, &z_get);
+
+	//			msg.Format(_T("GzGetZ, z: %f, z_get: %f\n"), z, z_get);
+	//			//AfxMessageBox(msg);
+
+	//			if (z >= z_get) {
+	//				checksum++;
+	//				msg.Format(_T("checksum: %f\n"), checksum);
+	//				//AfxMessageBox(msg);
+	//			}
+	//		}
+
+	//	}
+	//}
 	//p is the probability that the pixel is shadow
 
-	msg.Format(_T("checksum, p: %f\n"), (float)(checksum / nbinarycheck));
+	//msg.Format(_T("checksum, p: %f\n"), (float)(checksum / nbinarycheck));
 	//AfxMessageBox(msg);
-	return (float)(checksum / nbinarycheck);
+	/*return (float)(checksum / nbinarycheck);*/
 }
 int GzRender::GzPutTriangle(int numParts, GzToken *nameList, GzPointer *valueList)
 /* numParts - how many names and values */
