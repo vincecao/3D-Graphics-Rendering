@@ -1,0 +1,117 @@
+﻿  rend.cpp
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(43): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(46): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(59): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(65): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(95): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(96): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(97): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(119): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(120): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(122): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(123): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(125): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(126): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(79): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(73): warning C4101: 'j': unreferenced local variable
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(72): warning C4101: 'foo': unreferenced local variable
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(158): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(159): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(161): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(162): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(182): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(183): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(187): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(188): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(209): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(210): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(212): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(213): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(305): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(330): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(331): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(332): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(398): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(410): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(423): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(593): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1022): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1023): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1025): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1026): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1028): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1029): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1091): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1155): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1174): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1175): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1217): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1284): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1301): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1302): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1342): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1384): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1449): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1466): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1467): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1507): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1547): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1611): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1628): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1629): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1667): warning C4244: 'argument': conversion from 'float' to 'GzDepth', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1019): warning C4101: 'uvVz': unreferenced local variable
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1685): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1689): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1690): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1692): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1693): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1695): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1696): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1710): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1781): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1787): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1788): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1789): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1790): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1796): warning C4305: '-=': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1802): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1824): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1832): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1850): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1859): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1860): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1861): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1862): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1870): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1871): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1872): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1873): warning C4305: 'initializing': truncation from 'double' to 'float'
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1941): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1942): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1943): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1944): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1983): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1984): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1985): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1986): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2025): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2026): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2027): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2028): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2067): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2068): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2069): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2070): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1727): warning C4101: 'offsetx': unreferenced local variable
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1727): warning C4101: 'offsety': unreferenced local variable
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(1729): warning C4101: 'first_vertix': unreferenced local variable
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2109): warning C4101: 'N': unreferenced local variable
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2130): warning C4101: 'N': unreferenced local variable
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2242): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2262): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2267): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2336): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+\\vmware-host\shared folders\desktop\cppverison_v_bend\rend.cpp(2352): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  CS580HW5.vcxproj -> \\vmware-host\Shared Folders\Desktop\CppVerison_V_Bend\.\Release\CS580HW5.exe
