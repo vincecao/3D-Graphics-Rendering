@@ -1,12 +1,11 @@
-Lineng Cao
+# Wind effect by normal mapping
 
-6298279121
+## Involved timer and normal map texutre
 
-linengca@usc.edu
+![](../../screenshots/wind.jpg)
 
-visual studio 2017 ver 15.9.16
 
----
-Need to switch to "release" instead of "debug" for building
-
-Need Manual change  `valueListShader[5] = (GzPointer)0`, `(GzPointer)(tex_fun)` OR `(GzPointer)(ptex_fun)`in `Application5.cpp` to get texture.
+## Procedural texture
+Without Wind distortion          |  With Wind distortion
+:-------------------------:|:-------------------------:
+![](../../screenshots/output_non_wind.jpg) | ![](../../screenshots/output_wind.jpg)

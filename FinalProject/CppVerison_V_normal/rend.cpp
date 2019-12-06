@@ -61,7 +61,7 @@ float rand_curve() {
 float rand_time() {
 	int t1=clock()/10000;
 	int t = t1 % 100;
-	t = 5;
+	t = 115;
 	return  t*0.005;
 }
 int reset_n = 1;

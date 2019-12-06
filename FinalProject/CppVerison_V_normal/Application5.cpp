@@ -337,7 +337,7 @@ float distance(float x1, float y1, float z1, float x2, float y2, float z2) {
 }
 
 void recursive(GzCoord* vertexList, GzCoord* normalList, GzTextureIndex* uvList, float* midPoint, GzRender* m_pRender, GzToken* nameListTriangle, int count) {
-	if (count == 4 || distance(vertexList[0][0], vertexList[0][1], vertexList[0][2], midPoint[0], midPoint[1], midPoint[2]) < 0.1) return;
+	if (count == 5 || distance(vertexList[0][0], vertexList[0][1], vertexList[0][2], midPoint[0], midPoint[1], midPoint[2]) < 0.1) return;
 	GzPointer TempListTriangle[3];
 	GzCoord		TempVertexList[3];
 	GzCoord		TempNormalList[3];

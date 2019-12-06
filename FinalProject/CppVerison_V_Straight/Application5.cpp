@@ -310,7 +310,7 @@ int Application5::Render()
 }
 
 void recursive(GzCoord* vertexList, GzCoord* normalList, GzTextureIndex* uvList, float* midPoint, GzRender* m_pRender, GzToken* nameListTriangle, int count) {
-	if (count == 2) return;
+	if (count == 5) return;
 	GzPointer TempListTriangle[3];
 	GzCoord		TempVertexList[3];
 	GzCoord		TempNormalList[3];
