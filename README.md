@@ -57,7 +57,7 @@ Toggle `1`, or `0` in line `185` to toogle texture, produced texture or shading 
 # Final Project - Grass effect of Teapot
 Teamed with [Shanshan Cai](https://github.com/shanshan3333333), [Sifan Geng](https://github.com/SifanGeng)
 
-[Report](FinalProject\Report.pdf)
+### [Report Review](FinalProject/Report.pdf)
 
 ## Straight grass effect
 
